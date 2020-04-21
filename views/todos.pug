@@ -3,11 +3,11 @@ form(action='/todos', method='GET')
   button(type='subtmit') Search
 
 form(action='/todos/create', method='POST')
-  input(name='todo')
+  input(name='text')
   button(type='subtmit') Create
 
 ul
   each todo in todos
-    li= todo
+    li #{todo.text}
   
   
