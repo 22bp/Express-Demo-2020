@@ -5,6 +5,15 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
 const app = express();
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
+
+const adapter = new FileSync("db.json");
+const db = low(adapter);
+const shortid = require("shortid");
+
+// Set some defaults (required if your JSON file is empty)
+db.defaults({ todos: [] }).write();
 
 app.set("view engine", "pug");
 app.set("views", "./views");
@@ -12,7 +21,7 @@ app.set("views", "./views");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var todos = ["Đi chợ", "Nấu cơm", "Rửa chén", "Học code tại CodersX"];
+var todos = db.get("todos").value();
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (req, res) => {
@@ -26,7 +35,7 @@ app.get("/todos", (req, res) => {
     var q = req.query.q;
 
     filtered = todos.filter(
-      todo => todo.toLowerCase().indexOf(q.toLowerCase()) !== -1
+      todo => todo.text.toLowerCase().indexOf(q.toLowerCase()) !== -1
     );
   }
 
@@ -34,7 +43,9 @@ app.get("/todos", (req, res) => {
 });
 
 app.post("/todos/create", (req, res) => {
-  todos.push(req.body.todo);
+  db.get("todos")
+    .push({ id: shortid.generate(), text: req.body.text })
+    .write();
   res.redirect("/todos");
 });
 
