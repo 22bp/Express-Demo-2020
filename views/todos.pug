@@ -1,3 +1,6 @@
+form(action='/todos', method='GET')
+  input(name='q')
+  button(type='subtmit') Search
 ul
   each todo in todos
     li= todo
