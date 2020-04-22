@@ -3,6 +3,7 @@ const app = express();
 
 const booksRoute = require("./routes/books");
 const usersRoute = require("./routes/users");
+const transactionsRoute = require('./routes/transactions')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.use("/books", booksRoute);
 app.use("/users", usersRoute);
+app.use("/transactions", transactionsRoute);
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
