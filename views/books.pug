@@ -1,0 +1,21 @@
+h1 Books
+form(action='/books', method='GET')
+  input(name='q', placeholder="Enter book's name")
+  button(type='submit') Search
+p
+  a(href='/books/add') Add new
+table(style="width: 100%; border-collapse: collapse; border: 1px solid black;")
+  thead
+    tr
+      th(style="border: 1px solid black;") Title
+      th(style="border: 1px solid black;") Actions
+  tbody
+    each book in books
+      tr
+        td(style="border: 1px solid black;") #{book.title}
+        td(style="border: 1px solid black;display: flex; justify-content: space-around;")
+          a(href='/books/' + book.id + '/view') View
+          span 
+          a(href='/books/' + book.id + '/edit') Edit
+          span 
+          a(href='/books/' + book.id + '/delete') Delete
