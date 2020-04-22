@@ -42,18 +42,21 @@
     {
       "user": "tygXRQhII",
       "books": [
+        "F2dGM",
         "Yi4tHybrM"
       ],
-      "id": "vMcDycF3d"
+      "id": "8h_6DHfjW",
+      "isComplete": true
     },
     {
       "user": "zuNew7jJD",
       "books": [
+        "Yi4tHybrM",
         "gP5I94tdh",
-        "u9WjeI8i4",
         "hWud0vKgd"
       ],
-      "id": "uJGqSDlgP"
+      "id": "qqOT0Paal",
+      "isComplete": true
     }
   ]
 }

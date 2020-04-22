@@ -12,6 +12,7 @@ block content
         th(style="border: 1px solid black;") ID
         th(style="border: 1px solid black;") User
         th(style="border: 1px solid black;") NumBooks
+        th(style="border: 1px solid black;") isComplete
         th(style="border: 1px solid black;") Actions
     tbody
       each transaction in transactions
@@ -19,6 +20,8 @@ block content
           td(style="border: 1px solid black;") #{transaction.id}
           td(style="border: 1px solid black;") #{transaction.user}
           td(style="border: 1px solid black;") #{transaction.books.length}
+          td(style="border: 1px solid black;")
+            a(href='/transactions/' + transaction.id + '/complete') #{transaction.isComplete}
           td(style="border: 1px solid black;display: flex; justify-content: space-around;")
             a(href='/transactions/' + transaction.id + '/view') View
             span 
