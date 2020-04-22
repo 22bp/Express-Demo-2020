@@ -1,77 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const shortid = require("shortid");
-const db = require('../db');
 
-var users = db.get('users').value();
+const {
+  index,
+  view,
+  add,
+  postAdd,
+  edit,
+  postEdit,
+  deleteUser
+} = require("../controllers/users");
 
 // Show all users
-router.get("/", (req, res) => {
-  var filtered = [...users];
-
-  if (req.query.q) {
-    filtered = users.filter(
-      user => user.name.toLowerCase().indexOf(req.query.q.toLowerCase()) !== -1
-    );
-  }
-
-  res.render("users", { users: filtered });
-});
+router.get("/", index);
 
 // Show user
-router.get("/:id/view", (req, res) => {
-  var user = db
-    .get("users")
-    .find({ id: req.params.id })
-    .value();
-  if (user) {
-   res.render("users/view-user", { user }); 
-  } else {
-    res.send('User not found')
-  }
-});
+router.get("/:id/view", view);
 
 // Add user
-router.get("/add", (req, res) => {
-  res.render("users/add-user");
-});
+router.get("/add", add);
 
-router.post("/add", (req, res) => {
-  if (req.body && req.body.name !== '' && req.body.phone !== '') {
-    var newUser = req.body;
-    newUser.id = shortid.generate();
-
-    db.get("users")
-      .push(newUser)
-      .write();
-    res.redirect("/users");
-  }
-});
+router.post("/add", postAdd);
 
 // Edit user
-router.get("/:id/edit", (req, res) => {
-  var user = db.get('users').find({ id: req.params.id }).value();
-  if (user) {
-   res.render("users/edit-user", { user }); 
-  } else {
-    res.send('User not found');
-  }
-});
+router.get("/:id/edit", edit);
 
-router.post('/:id/edit', (req, res) => {
-  db.get('users').find({ id: req.params.id }).assign(req.body).write();
-  res.redirect('/users/'+ req.params.id + '/view');
-})
+router.post("/:id/edit", postEdit);
 
 // Delete user
-router.get('/:id/delete', (req, res) => {
-  var user = db.get('users').find({ id: req.params.id }).value();
-  if (user) {
-   db.get('users').remove({ id: user.id }).write();
-    res.redirect('/users')
-  } else {
-    res.send('User not found');
-  }
-})
+router.get("/:id/delete", deleteUser);
 
 module.exports = router;

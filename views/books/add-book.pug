@@ -1,13 +1,12 @@
-h1 Add new book
-form(action='/books/add', method='POST')
-  div
-    | Title: 
-    input(name='title' style="width: 330px")
-  div
-    p Description: 
-    textarea(rows='10', cols='50' name='description')
-  br
-  button(type='subtmit') Add
-  
-  p
-    a(href='/books') Back to Books
+extends ../layout
+block content
+  h1 Add new book
+  form(action='/books/add', method='POST')
+    div
+      | Title: 
+      input(name='title' style="width: 330px;")
+    div
+      p Description: 
+      textarea(rows='10', cols='50' name='description')
+    br
+    button(type='submit') Add

@@ -1,0 +1,11 @@
+extends ../layout
+block content
+  h1 Transaction: #{transaction.id}
+  div
+    h2 User: 
+    p Name: #{user.name} 
+    p Phone: #{user.phone}
+  div
+    h2 Books: 
+    each book, index in books
+      p #{index + 1} - #{book.title}

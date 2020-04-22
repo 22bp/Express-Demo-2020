@@ -1,0 +1,16 @@
+extends ../layout
+block content
+  h1 Edit transaction
+  form(action='/transactions/'+ transaction.id +'/edit', method='POST')
+    h2(style="display: inline;") Users: 
+    select(name='user')
+      each user in users
+        option(value=user.id) #{user.id} - #{user.name}
+    div
+      h2 Books:
+      each book, index in books
+        input(type='checkbox', name='books', value=book.id)
+        label(for='books')  #{book.title}
+        br
+    br
+    button(type='submit') Save

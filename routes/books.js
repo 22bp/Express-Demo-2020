@@ -1,77 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const shortid = require("shortid");
-const db = require('../db');
 
-var books = db.get("books").value();
+const {
+  index,
+  view,
+  add,
+  postAdd,
+  edit,
+  postEdit,
+  deleteBook
+} = require("../controllers/books");
 
 // Show all books
-router.get("/", (req, res) => {
-  var filtered = [...books];
-
-  if (req.query.q) {
-    filtered = books.filter(
-      book => book.title.toLowerCase().indexOf(req.query.q.toLowerCase()) !== -1
-    );
-  }
-
-  res.render("books", { books: filtered });
-});
+router.get("/", index);
 
 // Show single book
-router.get("/:id/view", (req, res) => {
-  var book = db
-    .get("books")
-    .find({ id: req.params.id })
-    .value();
-  if (book) {
-   res.render("books/view-book", { book }); 
-  } else {
-    res.send('Book not found')
-  }
-});
+router.get("/:id/view", view);
 
 // Add book
-router.get("/add", (req, res) => {
-  res.render("books/add-book");
-});
+router.get("/add", add);
 
-router.post("/add", (req, res) => {
-  if (req.body && req.body.title !== '' && req.body.description !== '') {
-    var newBook = req.body;
-    newBook.id = shortid.generate();
-
-    db.get("books")
-      .push(newBook)
-      .write();
-    res.redirect("/books");
-  }
-});
+router.post("/add", postAdd);
 
 // Edit book
-router.get("/:id/edit", (req, res) => {
-  var book = db.get('books').find({ id: req.params.id }).value();
-  if (book) {
-   res.render("books/edit-book", { book }); 
-  } else {
-    res.send('Book not found');
-  }
-});
+router.get("/:id/edit", edit);
 
-router.post('/:id/edit', (req, res) => {
-  db.get('books').find({ id: req.params.id }).assign(req.body).write();
-  res.redirect('/books/'+ req.params.id + '/view');
-})
+router.post("/:id/edit", postEdit);
 
 // Delete book
-router.get('/:id/delete', (req, res) => {
-  var book = db.get('books').find({ id: req.params.id }).value();
-  if (book) {
-   db.get('books').remove({ id: book.id }).write();
-    res.redirect('/books')
-  } else {
-    res.send('Book not found');
-  }
-})
+router.get("/:id/delete", deleteBook);
 
 module.exports = router;

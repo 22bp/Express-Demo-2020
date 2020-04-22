@@ -1,0 +1,30 @@
+extends ../layout
+block content
+  h1 Transactions
+  form(action='/transactions', method='GET')
+    input(name='q', placeholder="Enter transaction id")
+    button(type='submit') Search
+  p
+    a(href='/transactions/create') Add new
+  table
+    thead
+      tr
+        th ID
+        th User
+        th NumBooks
+        th isComplete
+        th Actions
+    tbody
+      each transaction in transactions
+        tr
+          td #{transaction.id}
+          td #{transaction.user}
+          td #{transaction.books.length}
+          td
+            a(href='/transactions/' + transaction.id + '/complete') #{transaction.isComplete}
+          td(class="actions")
+            a(href='/transactions/' + transaction.id + '/view') View
+            span 
+            a(href='/transactions/' + transaction.id + '/edit') Edit
+            span 
+            a(href='/transactions/' + transaction.id + '/delete') Delete
