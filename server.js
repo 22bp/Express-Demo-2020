@@ -7,6 +7,7 @@ const transactionsRoute = require('./routes/transactions')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 app.set("view engine", "pug");
 app.set("views", "./views");

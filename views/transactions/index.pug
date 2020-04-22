@@ -6,23 +6,23 @@ block content
     button(type='submit') Search
   p
     a(href='/transactions/create') Add new
-  table(style="width: 100%; border-collapse: collapse; border: 1px solid black;")
+  table
     thead
       tr
-        th(style="border: 1px solid black;") ID
-        th(style="border: 1px solid black;") User
-        th(style="border: 1px solid black;") NumBooks
-        th(style="border: 1px solid black;") isComplete
-        th(style="border: 1px solid black;") Actions
+        th ID
+        th User
+        th NumBooks
+        th isComplete
+        th Actions
     tbody
       each transaction in transactions
         tr
-          td(style="border: 1px solid black;") #{transaction.id}
-          td(style="border: 1px solid black;") #{transaction.user}
-          td(style="border: 1px solid black;") #{transaction.books.length}
-          td(style="border: 1px solid black;")
+          td #{transaction.id}
+          td #{transaction.user}
+          td #{transaction.books.length}
+          td
             a(href='/transactions/' + transaction.id + '/complete') #{transaction.isComplete}
-          td(style="border: 1px solid black;display: flex; justify-content: space-around;")
+          td(class="actions")
             a(href='/transactions/' + transaction.id + '/view') View
             span 
             a(href='/transactions/' + transaction.id + '/edit') Edit

@@ -6,16 +6,16 @@ block content
     button(type='submit') Search
   p
     a(href='/users/add') Add new
-  table(style="width: 100%; border-collapse: collapse; border: 1px solid black;")
+  table
     thead
       tr
-        th(style="border: 1px solid black;") Name
-        th(style="border: 1px solid black;") Actions
+        th Name
+        th Actions
     tbody
       each user in users
         tr
-          td(style="border: 1px solid black;") #{user.name}
-          td(style="border: 1px solid black;display: flex; justify-content: space-around;")
+          td #{user.name}
+          td(class="actions")
             a(href='/users/' + user.id + '/view') View
             span 
             a(href='/users/' + user.id + '/edit') Edit

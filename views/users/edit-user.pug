@@ -4,10 +4,10 @@ block content
   form(action='/users/'+ user.id + '/edit', method='POST')
     div
       | Name: 
-      input(name='name' style="width: 330px" value=user.name)
+      input(name='name' style="width: 330px;" value=user.name)
     br
     div
       | Name: 
-      input(name='phone' style="width: 330px" value=user.phone)
+      input(name='phone' style="width: 330px;" value=user.phone)
     br
     button(type='submit') Save

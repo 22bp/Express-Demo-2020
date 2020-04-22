@@ -6,16 +6,16 @@ block content
     button(type='submit') Search
   p
     a(href='/books/add') Add new
-  table(style="width: 100%; border-collapse: collapse; border: 1px solid black;")
+  table
     thead
       tr
-        th(style="border: 1px solid black;") Title
-        th(style="border: 1px solid black;") Actions
+        th Title
+        th Actions
     tbody
       each book in books
         tr
-          td(style="border: 1px solid black;") #{book.title}
-          td(style="border: 1px solid black;display: flex; justify-content: space-around;")
+          td #{book.title}
+          td(class="actions")
             a(href='/books/' + book.id + '/view') View
             span 
             a(href='/books/' + book.id + '/edit') Edit

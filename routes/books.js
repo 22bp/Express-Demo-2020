@@ -18,7 +18,7 @@ router.get("/", index);
 router.get("/:id/view", view);
 
 // Add book
-router.get("/add");
+router.get("/add", add);
 
 router.post("/add", postAdd);
 
