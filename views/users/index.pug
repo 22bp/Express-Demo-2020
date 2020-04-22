@@ -1,0 +1,24 @@
+h1 Users
+form(action='/users', method='GET')
+  input(name='q', placeholder="Enter user's name")
+  button(type='submit') Search
+p
+  a(href='/users/add') Add new
+table(style="width: 100%; border-collapse: collapse; border: 1px solid black;")
+  thead
+    tr
+      th(style="border: 1px solid black;") Name
+      th(style="border: 1px solid black;") Actions
+  tbody
+    each user in users
+      tr
+        td(style="border: 1px solid black;") #{user.name}
+        td(style="border: 1px solid black;display: flex; justify-content: space-around;")
+          a(href='/users/' + user.id + '/view') View
+          span 
+          a(href='/users/' + user.id + '/edit') Edit
+          span 
+          a(href='/users/' + user.id + '/delete') Delete
+          
+p
+  a(href='/books') Back to Books
