@@ -25,7 +25,7 @@ module.exports.view = (req, res) => {
   if (user) {
     res.render("users/view-user", { user });
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };
 
@@ -35,7 +35,25 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  if (req.body && req.body.name !== "" && req.body.phone !== "") {
+  var errors = [];
+
+  if (req.body.name === "") {
+    errors.push("Name is required");
+  }
+
+  if (req.body.name.length > 30) {
+    errors.push("Name is not over 30 chars");
+  }
+
+  if (req.body.phone === "") {
+    errors.push("Phone is required");
+  }
+
+  if (errors.length) {
+    return res.render("users/add-user", { errors, values: req.body });
+  }
+
+  if (req.body) {
     var newUser = req.body;
     newUser.id = shortid.generate();
 
@@ -55,16 +73,42 @@ module.exports.edit = (req, res) => {
   if (user) {
     res.render("users/edit-user", { user });
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };
 
 module.exports.postEdit = (req, res) => {
-  db.get("users")
+  var user = db
+    .get("users")
     .find({ id: req.params.id })
-    .assign(req.body)
-    .write();
-  res.redirect("/users/" + req.params.id + "/view");
+    .value();
+  if (user) {
+    var errors = [];
+
+    if (req.body.name === "") {
+      errors.push("Name is required");
+    }
+
+    if (req.body.name.length > 30) {
+      errors.push("Name is not over 30 chars");
+    }
+
+    if (req.body.phone === "") {
+      errors.push("Phone is required");
+    }
+
+    if (errors.length) {
+      return res.render("users/edit-user", { errors, values: req.body, user });
+    }
+    
+    db.get("users")
+      .find({ id: user.id })
+      .assign(req.body)
+      .write();
+    res.redirect("/users/" + user.id + "/view");
+  } else {
+    res.render("404", { resource: "User" });
+  }
 };
 
 // Delete user
@@ -79,6 +123,6 @@ module.exports.deleteUser = (req, res) => {
       .write();
     res.redirect("/users");
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };

@@ -41,7 +41,7 @@ module.exports.view = (req, res) => {
     });
     res.render("transactions/view-transaction", { transaction, user, books });
   } else {
-    res.send("Transaction not found");
+    res.render("404", { resource: "Transaction" });
   }
 };
 
@@ -51,7 +51,26 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.postCreate = (req, res) => {
-  if (req.body && req.body.user !== "" && req.body.books !== "") {
+  var errors = [];
+
+  if (!req.body.user) {
+    errors.push("Please select user");
+  }
+
+  if (!req.body.books) {
+    errors.push("Please select books");
+  }
+
+  if (errors.length) {
+    return res.render("transactions/create-transaction", {
+      users,
+      books,
+      errors,
+      values: req.body
+    });
+  }
+
+  if (req.body) {
     if (typeof req.body.books === "string") {
       req.body.books = [req.body.books];
     }
@@ -75,20 +94,48 @@ module.exports.edit = (req, res) => {
   if (transaction) {
     res.render("transactions/edit-transaction", { transaction, users, books });
   } else {
-    res.send("Transaction not found");
+    res.render("404", { resource: "Transaction" });
   }
 };
 
 module.exports.postEdit = (req, res) => {
-  if (req.body && req.body.user !== "" && req.body.books !== "") {
-    if (typeof req.body.books === "string") {
-      req.body.books = [req.body.books];
+  var transaction = db
+    .get("transactions")
+    .find({ id: req.params.id })
+    .value();
+  if (transaction) {
+    var errors = [];
+
+    if (!req.body.user) {
+      errors.push("Please select user");
     }
-    db.get("transactions")
-      .find({ id: req.params.id })
-      .assign(req.body)
-      .write();
-    res.redirect("/transactions/" + req.params.id + "/view");
+
+    if (!req.body.books) {
+      errors.push("Please select books");
+    }
+
+    if (errors.length) {
+      return res.render("transactions/create-transaction", {
+        users,
+        books,
+        errors,
+        values: req.body,
+        transaction
+      });
+    }
+    
+    if (req.body) {
+      if (typeof req.body.books === "string") {
+        req.body.books = [req.body.books];
+      }
+      db.get("transactions")
+        .find({ id: transaction.id })
+        .assign(req.body)
+        .write();
+      res.redirect("/transactions/" + transaction.id + "/view");
+    } else {
+      res.render("404", { resource: "Transaction" });
+    }
   }
 };
 
@@ -104,13 +151,13 @@ module.exports.deleteTran = (req, res) => {
       .write();
     res.redirect("/transactions");
   } else {
-    res.send("Transaction not found");
+    res.render("404", { resource: "Transaction" });
   }
 };
 
 // Complete transaction
 module.exports.complete = (req, res) => {
-    var transaction = db
+  var transaction = db
     .get("transactions")
     .find({ id: req.params.id })
     .value();
@@ -121,6 +168,6 @@ module.exports.complete = (req, res) => {
       .write();
     res.redirect("/transactions");
   } else {
-    res.send("Transaction not found");
+    res.render("404", { resource: "Transaction" });
   }
-}
+};

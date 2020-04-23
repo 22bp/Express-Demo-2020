@@ -3,7 +3,7 @@
     {
       "id": "F2dGM",
       "title": "The Complete Sherlock Holmes",
-      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+      "description": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia."
     },
     {
       "title": "Gandhi's Life in His Own Words",
@@ -36,6 +36,11 @@
       "name": "Khoa",
       "phone": "5555555",
       "id": "zuNew7jJD"
+    },
+    {
+      "name": "Huong",
+      "phone": "666666666",
+      "id": "-kmqmmLzZ"
     }
   ],
   "transactions": [
@@ -57,6 +62,36 @@
       ],
       "id": "qqOT0Paal",
       "isComplete": true
+    },
+    {
+      "user": "-kmqmmLzZ",
+      "books": [
+        "F2dGM",
+        "gP5I94tdh",
+        "u9WjeI8i4",
+        "hWud0vKgd"
+      ],
+      "id": "hKbSaEO3v",
+      "isComplete": false
+    },
+    {
+      "user": "zuNew7jJD",
+      "books": [
+        "gP5I94tdh",
+        "u9WjeI8i4"
+      ],
+      "id": "Y7DrEqzkJ",
+      "isComplete": true
+    },
+    {
+      "user": "tygXRQhII",
+      "books": [
+        "Yi4tHybrM",
+        "gP5I94tdh",
+        "hWud0vKgd"
+      ],
+      "id": "90Ft8ZyJ4",
+      "isComplete": false
     }
   ]
 }

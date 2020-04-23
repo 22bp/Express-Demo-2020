@@ -1,13 +1,23 @@
 extends ../layout
 block content
   h1 Edit book
-  form(action='/books/'+ book.id + '/edit', method='POST')
-    div
-      | Title: 
-      input(name='title' style="width: 330px;" value=book.title)
-    br
-    div
-      p Description: 
-      textarea(rows='10', cols='50' name='description') #{book.description}
-    br
-    button(type='submit') Save
+  if errors
+    each error in errors
+      .alert.alert-danger= error
+    form(action='/books/'+ book.id + '/edit', method='POST')
+      div.mb-2
+        label Title
+        input.form-control(name='title' value=values ? values.title : "")
+      div.mb-2
+        label Description
+        textarea.form-control(rows='10', cols='50' name='description') #{values ? values.description : ""}
+      button.btn.btn-primary(type='submit') Save
+  else
+    form(action='/books/'+ book.id + '/edit', method='POST')
+      div.mb-2
+        label Title
+        input.form-control(name='title' value=book.title)
+      div.mb-2
+        label Description
+        textarea.form-control(rows='10', cols='50' name='description') #{book.description}
+      button.btn.btn-primary(type='submit') Save

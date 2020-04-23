@@ -25,7 +25,7 @@ module.exports.view = (req, res) => {
   if (book) {
     res.render("books/view-book", { book });
   } else {
-    res.send("Book not found");
+    res.render("404", { resource: "Book" });
   }
 };
 
@@ -35,7 +35,21 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  if (req.body && req.body.title !== "" && req.body.description !== "") {
+  var errors = [];
+
+  if (req.body.title === "") {
+    errors.push("Title is required");
+  }
+
+  if (req.body.description === "") {
+    errors.push("Description is required");
+  }
+
+  if (errors.length) {
+    return res.render("books/add-book", { errors, values: req.body });
+  }
+
+  if (req.body) {
     var newBook = req.body;
     newBook.id = shortid.generate();
 
@@ -55,16 +69,38 @@ module.exports.edit = (req, res) => {
   if (book) {
     res.render("books/edit-book", { book });
   } else {
-    res.send("Book not found");
+    res.render("404", { resource: "Book" });
   }
 };
 
 module.exports.postEdit = (req, res) => {
-  db.get("books")
+  var book = db
+    .get("books")
     .find({ id: req.params.id })
-    .assign(req.body)
-    .write();
-  res.redirect("/books/" + req.params.id + "/view");
+    .value();
+  if (book) {
+    var errors = [];
+
+    if (req.body.title === "") {
+      errors.push("Title is required");
+    }
+
+    if (req.body.description === "") {
+      errors.push("Description is required");
+    }
+
+    if (errors.length) {
+      return res.render("books/edit-book", { errors, values: req.body, book });
+    }
+
+    db.get("books")
+      .find({ id: book.id })
+      .assign(req.body)
+      .write();
+    res.redirect("/books/" + book.id + "/view");
+  } else {
+    res.render("404", { resource: "Book" });
+  }
 };
 
 // Delete book
@@ -79,6 +115,6 @@ module.exports.deleteBook = (req, res) => {
       .write();
     res.redirect("/books");
   } else {
-    res.send("Book not found");
+    res.render("404", { resource: "Book" });
   }
 };

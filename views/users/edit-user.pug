@@ -1,13 +1,23 @@
 extends ../layout
 block content
   h1 Edit User
-  form(action='/users/'+ user.id + '/edit', method='POST')
-    div
-      | Name: 
-      input(name='name' style="width: 330px;" value=user.name)
-    br
-    div
-      | Name: 
-      input(name='phone' style="width: 330px;" value=user.phone)
-    br
-    button(type='submit') Save
+  if errors
+    each error in errors
+      .alert.alert-danger= error
+    form(action='/users/'+ user.id + '/edit', method='POST')
+      div.mb-2
+        label Name
+        input.form-control(name='name' value=values ? values.name : "")
+      div.mb-2
+        label Phone
+        input.form-control(name='phone' value=values ? values.phone : "")
+      button.btn.btn-primary(type='submit') Save
+  else
+    form(action='/users/'+ user.id + '/edit', method='POST')
+      div.mb-2
+        label Name
+        input.form-control(name='name' value=user.name)
+      div.mb-2
+        label Phone
+        input.form-control(name='phone' value=user.phone)
+      button.btn.btn-primary(type='submit') Save

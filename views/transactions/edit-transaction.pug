@@ -1,16 +1,40 @@
 extends ../layout
 block content
-  h1 Edit transaction
-  form(action='/transactions/'+ transaction.id +'/edit', method='POST')
-    h2(style="display: inline;") Users: 
-    select(name='user')
-      each user in users
-        option(value=user.id) #{user.id} - #{user.name}
-    div
-      h2 Books:
-      each book, index in books
-        input(type='checkbox', name='books', value=book.id)
-        label(for='books')  #{book.title}
-        br
-    br
-    button(type='submit') Save
+  h1 Edit transaction: #{transaction.id}
+  if errors
+    each error in errors
+      .alert.alert-danger= error
+    form(action='/transactions/'+ transaction.id +'/edit', method='POST')
+      div.mb-2
+        h2 Users: 
+        select.form-control(name='user')
+          each user in users
+            option(value=user.id) #{user.id} - #{user.name}
+      div.mb-2
+        h2 Books:
+        each book, index in books
+          input(type='checkbox', name='books', value=book.id)
+          label(for='books')  #{book.title}
+          br
+      button.btn.btn-primary(type='submit') Save
+  else
+    form(action='/transactions/'+ transaction.id +'/edit', method='POST')
+      div.mb-2
+        h2 Users: 
+        select.form-control(name='user')
+          each user in users
+            - var x = false
+            if user.id == transaction.user
+              - x = true
+            option(value=user.id, selected=x ? '' : null) #{user.id} - #{user.name}
+      div.mb-2
+        h2 Books:
+        each book, index in books
+          - var y = false
+          each tranBook in transaction.books
+            if tranBook == book.id
+              - y = true
+          input(type='checkbox', name='books', value=book.id, checked=y ? '' : null)
+          label(for='books')  #{book.title}
+          br
+      button.btn.btn-primary(type='submit') Save
