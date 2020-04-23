@@ -1,12 +1,12 @@
 extends ../layout
 block content
   h1 Users
-  form(action='/users', method='GET')
-    input(name='q', placeholder="Enter user's name")
-    button(type='submit') Search
+  form.form-inline(action='/users', method='GET')
+    input.form-control.mr-sm-2(name='q', placeholder="Enter user's name")
+    button.btn.btn-primary(type='submit') Search
   p
-    a(href='/users/add') Add new
-  table
+    a.btn.btn-primary(href='/users/add') Add new
+  table.table.table-bordered
     thead
       tr
         th Name
@@ -16,8 +16,6 @@ block content
         tr
           td #{user.name}
           td(class="actions")
-            a(href='/users/' + user.id + '/view') View
-            span 
-            a(href='/users/' + user.id + '/edit') Edit
-            span 
-            a(href='/users/' + user.id + '/delete') Delete
+            a.btn.btn-primary(href='/users/' + user.id + '/view') View
+            a.btn.btn-warning(href='/users/' + user.id + '/edit') Edit
+            a.btn.btn-danger(href='/users/' + user.id + '/delete') Delete

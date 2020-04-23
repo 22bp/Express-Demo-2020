@@ -11,6 +11,8 @@ const {
   deleteUser
 } = require("../controllers/users");
 
+const validations = require('../validations/users')
+
 // Show all users
 router.get("/", index);
 
@@ -20,12 +22,12 @@ router.get("/:id/view", view);
 // Add user
 router.get("/add", add);
 
-router.post("/add", postAdd);
+router.post("/add", validations.add, postAdd);
 
 // Edit user
 router.get("/:id/edit", edit);
 
-router.post("/:id/edit", postEdit);
+router.post("/:id/edit", validations.edit, postEdit);
 
 // Delete user
 router.get("/:id/delete", deleteUser);

@@ -11,6 +11,8 @@ const {
   deleteBook
 } = require("../controllers/books");
 
+const validations = require("../validations/books");
+
 // Show all books
 router.get("/", index);
 
@@ -20,12 +22,12 @@ router.get("/:id/view", view);
 // Add book
 router.get("/add", add);
 
-router.post("/add", postAdd);
+router.post("/add", validations.add, postAdd);
 
 // Edit book
 router.get("/:id/edit", edit);
 
-router.post("/:id/edit", postEdit);
+router.post("/:id/edit", validations.edit, postEdit);
 
 // Delete book
 router.get("/:id/delete", deleteBook);

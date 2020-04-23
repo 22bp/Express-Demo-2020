@@ -25,7 +25,7 @@ module.exports.view = (req, res) => {
   if (user) {
     res.render("users/view-user", { user });
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };
 
@@ -35,7 +35,7 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  if (req.body && req.body.name !== "" && req.body.phone !== "") {
+  if (req.body) {
     var newUser = req.body;
     newUser.id = shortid.generate();
 
@@ -55,16 +55,18 @@ module.exports.edit = (req, res) => {
   if (user) {
     res.render("users/edit-user", { user });
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };
 
 module.exports.postEdit = (req, res) => {
-  db.get("users")
-    .find({ id: req.params.id })
-    .assign(req.body)
-    .write();
-  res.redirect("/users/" + req.params.id + "/view");
+  if (req.body) {
+    db.get("users")
+      .find({ id: res.user.id })
+      .assign(req.body)
+      .write();
+    res.redirect("/users/" + res.user.id + "/view");
+  }
 };
 
 // Delete user
@@ -79,6 +81,6 @@ module.exports.deleteUser = (req, res) => {
       .write();
     res.redirect("/users");
   } else {
-    res.send("User not found");
+    res.render("404", { resource: "User" });
   }
 };

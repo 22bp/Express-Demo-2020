@@ -1,13 +1,14 @@
 extends ../layout
 block content
   h1 Add User
+  if errors
+    each error in errors
+      .alert.alert-danger= error
   form(action='/users/add', method='POST')
-    div
-      | Name: 
-      input(name='name' style="width: 330px;")
-    br
-    div
-      | Phone: 
-      input(name='phone' style="width: 330px;")
-    br
-    button(type='submit') Save
+    div.mb-2
+      label Name
+      input.form-control(name='name' value=values ? values.name : "")
+    div.mb-2
+      label Phone
+      input.form-control(name='phone' value=values ? values.phone : "")
+    button.btn.btn-primary(type='submit') Save

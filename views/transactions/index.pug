@@ -1,18 +1,18 @@
 extends ../layout
 block content
   h1 Transactions
-  form(action='/transactions', method='GET')
-    input(name='q', placeholder="Enter transaction id")
-    button(type='submit') Search
+  form.form-inline(action='/transactions', method='GET')
+    input.form-control.mr-sm-2(name='q', placeholder="Enter transaction id")
+    button.btn.btn-primary(type='submit') Search
   p
-    a(href='/transactions/create') Add new
-  table
+    a.btn.btn-primary(href='/transactions/create') Add new
+  table.table.table-bordered
     thead
       tr
         th ID
         th User
-        th NumBooks
-        th isComplete
+        th Books
+        th Finish
         th Actions
     tbody
       each transaction in transactions
@@ -21,10 +21,11 @@ block content
           td #{transaction.user}
           td #{transaction.books.length}
           td
-            a(href='/transactions/' + transaction.id + '/complete') #{transaction.isComplete}
+            if transaction.isComplete
+              a.btn.btn-success(href='/transactions/' + transaction.id + '/complete') Yes
+            else
+              a(href='/transactions/' + transaction.id + '/complete') No
           td(class="actions")
-            a(href='/transactions/' + transaction.id + '/view') View
-            span 
-            a(href='/transactions/' + transaction.id + '/edit') Edit
-            span 
-            a(href='/transactions/' + transaction.id + '/delete') Delete
+            a.btn.btn-primary(href='/transactions/' + transaction.id + '/view') View
+            a.btn.btn-warning(href='/transactions/' + transaction.id + '/edit') Edit
+            a.btn.btn-danger(href='/transactions/' + transaction.id + '/delete') Delete
