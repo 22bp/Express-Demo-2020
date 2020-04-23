@@ -51,25 +51,6 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.postCreate = (req, res) => {
-  var errors = [];
-
-  if (!req.body.user) {
-    errors.push("Please select user");
-  }
-
-  if (!req.body.books) {
-    errors.push("Please select books");
-  }
-
-  if (errors.length) {
-    return res.render("transactions/create-transaction", {
-      users,
-      books,
-      errors,
-      values: req.body
-    });
-  }
-
   if (req.body) {
     if (typeof req.body.books === "string") {
       req.body.books = [req.body.books];
@@ -99,43 +80,15 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  var transaction = db
-    .get("transactions")
-    .find({ id: req.params.id })
-    .value();
-  if (transaction) {
-    var errors = [];
-
-    if (!req.body.user) {
-      errors.push("Please select user");
+  if (req.body) {
+    if (typeof req.body.books === "string") {
+      req.body.books = [req.body.books];
     }
-
-    if (!req.body.books) {
-      errors.push("Please select books");
-    }
-
-    if (errors.length) {
-      return res.render("transactions/create-transaction", {
-        users,
-        books,
-        errors,
-        values: req.body,
-        transaction
-      });
-    }
-    
-    if (req.body) {
-      if (typeof req.body.books === "string") {
-        req.body.books = [req.body.books];
-      }
-      db.get("transactions")
-        .find({ id: transaction.id })
-        .assign(req.body)
-        .write();
-      res.redirect("/transactions/" + transaction.id + "/view");
-    } else {
-      res.render("404", { resource: "Transaction" });
-    }
+    db.get("transactions")
+      .find({ id: res.transaction.id })
+      .assign(req.body)
+      .write();
+    res.redirect("/transactions/" + res.transaction.id + "/view");
   }
 };
 

@@ -35,20 +35,6 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  var errors = [];
-
-  if (req.body.title === "") {
-    errors.push("Title is required");
-  }
-
-  if (req.body.description === "") {
-    errors.push("Description is required");
-  }
-
-  if (errors.length) {
-    return res.render("books/add-book", { errors, values: req.body });
-  }
-
   if (req.body) {
     var newBook = req.body;
     newBook.id = shortid.generate();
@@ -74,33 +60,11 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  var book = db
-    .get("books")
-    .find({ id: req.params.id })
-    .value();
-  if (book) {
-    var errors = [];
-
-    if (req.body.title === "") {
-      errors.push("Title is required");
-    }
-
-    if (req.body.description === "") {
-      errors.push("Description is required");
-    }
-
-    if (errors.length) {
-      return res.render("books/edit-book", { errors, values: req.body, book });
-    }
-
-    db.get("books")
-      .find({ id: book.id })
-      .assign(req.body)
-      .write();
-    res.redirect("/books/" + book.id + "/view");
-  } else {
-    res.render("404", { resource: "Book" });
-  }
+  db.get("books")
+    .find({ id: res.book.id })
+    .assign(req.body)
+    .write();
+  res.redirect("/books/" + res.book.id + "/view");
 };
 
 // Delete book

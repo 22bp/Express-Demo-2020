@@ -35,24 +35,6 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  var errors = [];
-
-  if (req.body.name === "") {
-    errors.push("Name is required");
-  }
-
-  if (req.body.name.length > 30) {
-    errors.push("Name is not over 30 chars");
-  }
-
-  if (req.body.phone === "") {
-    errors.push("Phone is required");
-  }
-
-  if (errors.length) {
-    return res.render("users/add-user", { errors, values: req.body });
-  }
-
   if (req.body) {
     var newUser = req.body;
     newUser.id = shortid.generate();
@@ -78,36 +60,12 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  var user = db
-    .get("users")
-    .find({ id: req.params.id })
-    .value();
-  if (user) {
-    var errors = [];
-
-    if (req.body.name === "") {
-      errors.push("Name is required");
-    }
-
-    if (req.body.name.length > 30) {
-      errors.push("Name is not over 30 chars");
-    }
-
-    if (req.body.phone === "") {
-      errors.push("Phone is required");
-    }
-
-    if (errors.length) {
-      return res.render("users/edit-user", { errors, values: req.body, user });
-    }
-    
+  if (req.body) {
     db.get("users")
-      .find({ id: user.id })
+      .find({ id: res.user.id })
       .assign(req.body)
       .write();
-    res.redirect("/users/" + user.id + "/view");
-  } else {
-    res.render("404", { resource: "User" });
+    res.redirect("/users/" + res.user.id + "/view");
   }
 };
 
