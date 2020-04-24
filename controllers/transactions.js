@@ -1,14 +1,30 @@
 const shortid = require("shortid");
 const db = require("../db");
+const calPagination = require("../utils/pagination");
 
-var users = db.get("users").value();
+var users = db
+  .get("users")
+  .filter({ isAdmin: false })
+  .value();
 var books = db.get("books").value();
-var transactions = db.get("transactions").value();
 
 // Show all transactions
 module.exports.index = (req, res) => {
+  var transactions;
+
+  if (res.user.isAdmin) {
+    transactions = db.get("transactions").value();
+  } else {
+    transactions = db
+      .get("transactions")
+      .filter({ user: res.user.id })
+      .value();
+    console.log(transactions);
+  }
+
   var filtered = [...transactions];
 
+  // Search
   if (req.query.q) {
     filtered = transactions.filter(
       transaction =>
@@ -16,7 +32,13 @@ module.exports.index = (req, res) => {
     );
   }
 
-  res.render("transactions", { transactions: filtered });
+  // Pagination
+  var result = calPagination(req.query.page, filtered);
+
+  res.render("transactions", {
+    transactions: result.filtered,
+    pagination: result.pagination
+  });
 };
 
 // Show transaction
@@ -51,19 +73,17 @@ module.exports.create = (req, res) => {
 };
 
 module.exports.postCreate = (req, res) => {
-  if (req.body) {
-    if (typeof req.body.books === "string") {
-      req.body.books = [req.body.books];
-    }
-    var newTransaction = req.body;
-    newTransaction.id = shortid.generate();
-    newTransaction.isComplete = false;
-
-    db.get("transactions")
-      .push(newTransaction)
-      .write();
-    res.redirect("/transactions");
+  if (typeof req.body.books === "string") {
+    req.body.books = [req.body.books];
   }
+  var newTransaction = req.body;
+  newTransaction.id = shortid.generate();
+  newTransaction.isComplete = false;
+
+  db.get("transactions")
+    .push(newTransaction)
+    .write();
+  res.redirect("/transactions");
 };
 
 // Edit transaction
@@ -80,16 +100,14 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  if (req.body) {
-    if (typeof req.body.books === "string") {
-      req.body.books = [req.body.books];
-    }
-    db.get("transactions")
-      .find({ id: res.transaction.id })
-      .assign(req.body)
-      .write();
-    res.redirect("/transactions/" + res.transaction.id + "/view");
+  if (typeof req.body.books === "string") {
+    req.body.books = [req.body.books];
   }
+  db.get("transactions")
+    .find({ id: res.transaction.id })
+    .assign(req.body)
+    .write();
+  res.redirect("/transactions/" + res.transaction.id + "/view");
 };
 
 // Delete transaction

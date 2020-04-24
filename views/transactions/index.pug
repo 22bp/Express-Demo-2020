@@ -29,3 +29,18 @@ block content
             a.btn.btn-primary(href='/transactions/' + transaction.id + '/view') View
             a.btn.btn-warning(href='/transactions/' + transaction.id + '/edit') Edit
             a.btn.btn-danger(href='/transactions/' + transaction.id + '/delete') Delete
+  nav(aria-label='...')
+    ul.pagination
+      li.page-item(class=pagination.prev ? "" : "disabled")
+        a.page-link(href='/transactions?page=' + pagination.prev, tabindex='-1', aria-disabled='true') Previous
+      if pagination.prev
+        li.page-item
+          a.page-link(href='/transactions?page=' + pagination.prev) #{pagination.prev}
+      li.page-item.active(aria-current='page')
+        a.page-link(href='/transactions?page=' + pagination.page) #{pagination.page}
+          span.sr-only (current)
+      if pagination.next
+        li.page-item
+          a.page-link(href='/transactions?page=' + pagination.next) #{pagination.next}
+      li.page-item(class=pagination.next ? "" : "disabled")
+        a.page-link(href='/transactions?page=' + pagination.next) Next

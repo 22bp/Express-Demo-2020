@@ -11,7 +11,7 @@ const {
   deleteUser
 } = require("../controllers/users");
 
-const validations = require('../validations/users')
+const validations = require("../validations/users");
 
 // Show all users
 router.get("/", index);
