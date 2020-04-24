@@ -28,19 +28,49 @@
   ],
   "users": [
     {
+      "name": "Admin",
+      "phone": "88888888",
+      "id": "tygXRQhIU",
+      "email": "admin@gmail.com",
+      "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
+      "isAdmin": true,
+      "wrongLoginCount": 0
+    },
+    {
       "name": "Tuong",
       "phone": "88888888",
-      "id": "tygXRQhII"
+      "id": "tygXRQhII",
+      "email": "tuong@gmail.com",
+      "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
+      "isAdmin": false,
+      "wrongLoginCount": 4
     },
     {
       "name": "Khoa",
       "phone": "5555555",
-      "id": "zuNew7jJD"
+      "id": "zuNew7jJD",
+      "email": "khoa@gmail.com",
+      "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
+      "isAdmin": false,
+      "wrongLoginCount": 0
     },
     {
       "name": "Huong",
       "phone": "666666666",
-      "id": "-kmqmmLzZ"
+      "id": "-kmqmmLzZ",
+      "email": "huong@gmail.com",
+      "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
+      "isAdmin": false,
+      "wrongLoginCount": 0
+    },
+    {
+      "email": "huynhdieutuong@gmail.com",
+      "password": "$2b$10$LYHxQ5wkdoVXKKzwWMCffOQpElGRw/VwppsnyyOL/rvxSRgzJOkHq",
+      "name": "Huỳnh Diệu Tường",
+      "phone": "669556",
+      "id": "R9ipDvNkY",
+      "isAdmin": false,
+      "wrongLoginCount": 0
     }
   ],
   "transactions": [
@@ -91,15 +121,7 @@
         "hWud0vKgd"
       ],
       "id": "90Ft8ZyJ4",
-      "isComplete": false
-    },
-    {
-      "user": "tygXRQhII",
-      "books": [
-        "u9WjeI8i4"
-      ],
-      "id": "9eKNlkgca",
-      "isComplete": false
+      "isComplete": true
     }
   ]
 }

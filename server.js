@@ -1,13 +1,18 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 
 const booksRoute = require("./routes/books");
 const usersRoute = require("./routes/users");
-const transactionsRoute = require('./routes/transactions')
+const transactionsRoute = require("./routes/transactions");
+const authRoute = require("./routes/auth");
+
+const { requiredAuth, requiredAdmin, loggedIn } = require("./middlewares/auth");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static("public"));
+app.use(cookieParser("daHjkfdGjx4"));
 
 app.set("view engine", "pug");
 app.set("views", "./views");
@@ -17,8 +22,12 @@ app.get("/", (req, res) => {
   res.redirect("/books");
 });
 
+app.use("/auth", loggedIn, authRoute);
+
+app.use(requiredAuth);
+
 app.use("/books", booksRoute);
-app.use("/users", usersRoute);
+app.use("/users", requiredAdmin, usersRoute);
 app.use("/transactions", transactionsRoute);
 
 // listen for requests :)

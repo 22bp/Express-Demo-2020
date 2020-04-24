@@ -13,11 +13,15 @@ const {
 
 const validations = require("../validations/books");
 
+const { requiredAdmin } = require('../middlewares/auth');
+
 // Show all books
 router.get("/", index);
 
 // Show single book
 router.get("/:id/view", view);
+
+router.use(requiredAdmin);
 
 // Add book
 router.get("/add", add);

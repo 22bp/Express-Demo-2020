@@ -14,11 +14,15 @@ const {
 
 const validations = require("../validations/transactions");
 
+const { requiredAdmin } = require('../middlewares/auth');
+
 // Show all transactions
 router.get("/", index);
 
 // Show transaction
 router.get("/:id/view", view);
+
+router.use(requiredAdmin);
 
 // Create transaction
 router.get("/create", create);

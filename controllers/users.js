@@ -1,7 +1,8 @@
 const shortid = require("shortid");
 const db = require("../db");
+const bcrypt = require('bcrypt');
 
-var users = db.get("users").value();
+var users = db.get("users").filter({ isAdmin: false }).value();
 
 // Show all users
 module.exports.index = (req, res) => {
@@ -35,15 +36,17 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  if (req.body) {
-    var newUser = req.body;
-    newUser.id = shortid.generate();
+  var newUser = req.body;
+  newUser.id = shortid.generate();
+  newUser.isAdmin = false;
 
-    db.get("users")
-      .push(newUser)
-      .write();
-    res.redirect("/users");
-  }
+  var hash = bcrypt.hashSync(newUser.password, 10);
+  newUser.password = hash;
+
+  db.get("users")
+    .push(newUser)
+    .write();
+  res.redirect("/users");
 };
 
 // Edit user
@@ -60,13 +63,11 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  if (req.body) {
-    db.get("users")
-      .find({ id: res.user.id })
-      .assign(req.body)
-      .write();
-    res.redirect("/users/" + res.user.id + "/view");
-  }
+  db.get("users")
+    .find({ id: res.user.id })
+    .assign(req.body)
+    .write();
+  res.redirect("/users/" + res.user.id + "/view");
 };
 
 // Delete user

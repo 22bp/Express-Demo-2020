@@ -35,15 +35,13 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  if (req.body) {
-    var newBook = req.body;
-    newBook.id = shortid.generate();
+  var newBook = req.body;
+  newBook.id = shortid.generate();
 
-    db.get("books")
-      .push(newBook)
-      .write();
-    res.redirect("/books");
-  }
+  db.get("books")
+    .push(newBook)
+    .write();
+  res.redirect("/books");
 };
 
 // Edit book

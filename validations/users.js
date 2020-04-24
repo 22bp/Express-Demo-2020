@@ -2,12 +2,25 @@ const db = require("../db");
 
 module.exports.add = (req, res, next) => {
   var errors = [];
+  
+  if (req.body.email === "") {
+    errors.push("Email is required");
+  } else {
+    var user = db.get("users").find({ email: req.body.email }).value();
+    if (user) {
+      errors.push("Email already used")
+    }
+  }
+  
+  if (req.body.password === "") {
+    errors.push("Password is required");
+  } else if (req.body.password.length < 6) {
+    errors.push("Password must equal or more 6 chars")
+  }
 
   if (req.body.name === "") {
     errors.push("Name is required");
-  }
-
-  if (req.body.name.length > 30) {
+  } else if (req.body.name.length > 30) {
     errors.push("Name is not over 30 chars");
   }
 
