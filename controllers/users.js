@@ -1,8 +1,12 @@
 const shortid = require("shortid");
 const db = require("../db");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
+const calPagination = require("../utils/pagination");
 
-var users = db.get("users").filter({ isAdmin: false }).value();
+var users = db
+  .get("users")
+  .filter({ isAdmin: false })
+  .value();
 
 // Show all users
 module.exports.index = (req, res) => {
@@ -14,7 +18,13 @@ module.exports.index = (req, res) => {
     );
   }
 
-  res.render("users", { users: filtered });
+  // Pagination
+  var result = calPagination(req.query.page, filtered);
+
+  res.render("users", {
+    users: result.filtered,
+    pagination: result.pagination
+  });
 };
 
 // Show user

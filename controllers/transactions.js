@@ -1,22 +1,30 @@
 const shortid = require("shortid");
 const db = require("../db");
+const calPagination = require("../utils/pagination");
 
-var users = db.get("users").filter({ isAdmin: false }).value();
+var users = db
+  .get("users")
+  .filter({ isAdmin: false })
+  .value();
 var books = db.get("books").value();
 
 // Show all transactions
 module.exports.index = (req, res) => {
   var transactions;
-  
+
   if (res.user.isAdmin) {
     transactions = db.get("transactions").value();
   } else {
-    transactions = db.get("transactions").filter({ user: res.user.id }).value();
+    transactions = db
+      .get("transactions")
+      .filter({ user: res.user.id })
+      .value();
     console.log(transactions);
   }
-  
+
   var filtered = [...transactions];
 
+  // Search
   if (req.query.q) {
     filtered = transactions.filter(
       transaction =>
@@ -24,7 +32,13 @@ module.exports.index = (req, res) => {
     );
   }
 
-  res.render("transactions", { transactions: filtered });
+  // Pagination
+  var result = calPagination(req.query.page, filtered);
+
+  res.render("transactions", {
+    transactions: result.filtered,
+    pagination: result.pagination
+  });
 };
 
 // Show transaction

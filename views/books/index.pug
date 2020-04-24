@@ -19,3 +19,18 @@ block content
             a.btn.btn-primary(href='/books/' + book.id + '/view') View
             a.btn.btn-warning(href='/books/' + book.id + '/edit') Edit
             a.btn.btn-danger(href='/books/' + book.id + '/delete') Delete
+  nav(aria-label='...')
+    ul.pagination
+      li.page-item(class=pagination.prev ? "" : "disabled")
+        a.page-link(href='/books?page=' + pagination.prev, tabindex='-1', aria-disabled='true') Previous
+      if pagination.prev
+        li.page-item
+          a.page-link(href='/books?page=' + pagination.prev) #{pagination.prev}
+      li.page-item.active(aria-current='page')
+        a.page-link(href='/books?page=' + pagination.page) #{pagination.page}
+          span.sr-only (current)
+      if pagination.next
+        li.page-item
+          a.page-link(href='/books?page=' + pagination.next) #{pagination.next}
+      li.page-item(class=pagination.next ? "" : "disabled")
+        a.page-link(href='/books?page=' + pagination.next) Next

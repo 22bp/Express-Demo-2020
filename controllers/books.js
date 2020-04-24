@@ -1,5 +1,6 @@
 const shortid = require("shortid");
 const db = require("../db");
+const calPagination = require("../utils/pagination");
 
 var books = db.get("books").value();
 
@@ -13,7 +14,13 @@ module.exports.index = (req, res) => {
     );
   }
 
-  res.render("books", { books: filtered });
+  // Pagination
+  var result = calPagination(req.query.page, filtered);
+
+  res.render("books", {
+    books: result.filtered,
+    pagination: result.pagination
+  });
 };
 
 // Show book
