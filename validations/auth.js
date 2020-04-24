@@ -1,5 +1,6 @@
 const db = require("../db");
 const bcrypt = require("bcrypt");
+const sendEmail = require("../utils/sendEmail");
 
 module.exports.login = (req, res, next) => {
   var errors = [];
@@ -22,6 +23,9 @@ module.exports.login = (req, res, next) => {
     } else {
       if (user.wrongLoginCount >= 3) {
         errors.push("Locked account for wrong login over 4 times.");
+
+        sendEmail(user.email);
+
         return res.render("auth/login", { errors });
       }
       var result = bcrypt.compareSync(req.body.password, user.password);

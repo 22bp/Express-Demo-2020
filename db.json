@@ -43,7 +43,7 @@
       "email": "tuong@gmail.com",
       "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
       "isAdmin": false,
-      "wrongLoginCount": 4
+      "wrongLoginCount": 0
     },
     {
       "name": "Khoa",
@@ -61,16 +61,7 @@
       "email": "huong@gmail.com",
       "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
       "isAdmin": false,
-      "wrongLoginCount": 0
-    },
-    {
-      "email": "huynhdieutuong@gmail.com",
-      "password": "$2b$10$LYHxQ5wkdoVXKKzwWMCffOQpElGRw/VwppsnyyOL/rvxSRgzJOkHq",
-      "name": "Huỳnh Diệu Tường",
-      "phone": "669556",
-      "id": "R9ipDvNkY",
-      "isAdmin": false,
-      "wrongLoginCount": 0
+      "wrongLoginCount": 3
     }
   ],
   "transactions": [

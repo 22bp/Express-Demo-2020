@@ -12,7 +12,7 @@ const { requiredAuth, requiredAdmin, loggedIn } = require("./middlewares/auth");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(cookieParser("daHjkfdGjx4"));
+app.use(cookieParser(process.env.SECRET_COOKIE));
 
 app.set("view engine", "pug");
 app.set("views", "./views");
