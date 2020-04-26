@@ -1,11 +1,11 @@
 extends ../layout
 block content
-  h1 Transactions
+  h1 
+    span.mr-2 Transactions
+    a.btn.btn-success(href='/transactions/create') Add new
   form.form-inline(action='/transactions', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter transaction id")
     button.btn.btn-primary(type='submit') Search
-  p
-    a.btn.btn-primary(href='/transactions/create') Add new
   table.table.table-bordered
     thead
       tr

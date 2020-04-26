@@ -34,16 +34,18 @@
       "email": "admin@gmail.com",
       "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
       "isAdmin": true,
-      "wrongLoginCount": 0
+      "wrongLoginCount": 0,
+      "avatarUrl": "https://cdn.glitch.com/5e4a14c0-4cf4-4ad9-bb42-1e03dd62c0ac%2Fperson-512.png"
     },
     {
       "name": "Tuong",
-      "phone": "88888888",
+      "phone": "66666",
       "id": "tygXRQhII",
       "email": "tuong@gmail.com",
-      "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
+      "password": "$2b$10$.fcwVZzzfQ.ubynXaMmMg.nnmUH0IFs3ViiOOn8ZDUtSgqJeOfbB2",
       "isAdmin": false,
-      "wrongLoginCount": 0
+      "wrongLoginCount": 0,
+      "avatarUrl": "http://res.cloudinary.com/dbu9wn1oz/image/upload/v1587874768/BookManagement/Avatars/3ecfd9b950651dc612d4310d5c7d4f2f.png"
     },
     {
       "name": "Khoa",
@@ -52,7 +54,8 @@
       "email": "khoa@gmail.com",
       "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
       "isAdmin": false,
-      "wrongLoginCount": 0
+      "wrongLoginCount": 0,
+      "avatarUrl": "https://cdn.glitch.com/5e4a14c0-4cf4-4ad9-bb42-1e03dd62c0ac%2Fperson-512.png"
     },
     {
       "name": "Huong",
@@ -61,7 +64,8 @@
       "email": "huong@gmail.com",
       "password": "$2b$10$kJAJ.8MZiC5orRIHYfB5SOHnKmB81XbA.b.eMsA7b9G0z0MGPP0oO",
       "isAdmin": false,
-      "wrongLoginCount": 3
+      "wrongLoginCount": 3,
+      "avatarUrl": "https://cdn.glitch.com/5e4a14c0-4cf4-4ad9-bb42-1e03dd62c0ac%2Fperson-512.png"
     }
   ],
   "transactions": [

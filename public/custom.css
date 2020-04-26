@@ -6,3 +6,7 @@ table {
 .actions .btn {
   margin-right: 5px;
 }
+
+.image-avatar {
+  width: 100px;
+}

@@ -1,11 +1,11 @@
 extends ../layout
 block content
-  h1 Users
+  h1 
+    span.mr-2 Users
+    a.btn.btn-success(href='/users/add') Add new
   form.form-inline(action='/users', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter user's name")
     button.btn.btn-primary(type='submit') Search
-  p
-    a.btn.btn-primary(href='/users/add') Add new
   table.table.table-bordered
     thead
       tr

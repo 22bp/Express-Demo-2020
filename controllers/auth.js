@@ -21,7 +21,8 @@ module.exports.postRegister = (req, res) => {
   var newUser = req.body;
   newUser.id = shortid.generate();
   newUser.isAdmin = false;
-
+  newUser.avatarUrl = process.env.DEFAULT_AVATAR;
+  
   var hash = bcrypt.hashSync(newUser.password, 10);
   newUser.password = hash;
   

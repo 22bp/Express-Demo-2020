@@ -2,10 +2,14 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 
+const cloudinary = require("cloudinary").v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
+
 const booksRoute = require("./routes/books");
 const usersRoute = require("./routes/users");
 const transactionsRoute = require("./routes/transactions");
 const authRoute = require("./routes/auth");
+const profileRoute = require("./routes/profile");
 
 const { requiredAuth, requiredAdmin, loggedIn } = require("./middlewares/auth");
 
@@ -29,6 +33,7 @@ app.use(requiredAuth);
 app.use("/books", booksRoute);
 app.use("/users", requiredAdmin, usersRoute);
 app.use("/transactions", transactionsRoute);
+app.use("/profile", profileRoute);
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
