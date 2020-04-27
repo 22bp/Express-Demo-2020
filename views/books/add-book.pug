@@ -4,11 +4,14 @@ block content
   if errors
     each error in errors
       .alert.alert-danger= error
-  form(action='/books/add', method='POST')
+  form(action='/books/add', method='POST', enctype='multipart/form-data')
     div.mb-2
       label Title
       input.form-control(name='title' value=values ? values.title : '')
     div.mb-2
       label Description
       textarea.form-control(rows='10', cols='50' name='description') #{values ? values.description : ''}
+    div.mb-2
+      label(for='cover') Select an cover
+      input#cover.form-control-file(type='file', name='cover')
     button.btn.btn-primary(type='submit') Add

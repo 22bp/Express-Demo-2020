@@ -1,0 +1,15 @@
+extends ../layout
+block content
+  h1 Profile
+  if alert
+    .alert.alert-success(role='alert') #{alert}
+  p
+    img(src=user.avatarUrl, style="width: 100px;")
+    p
+      a.btn.btn-success(href="/profile/avatar") Update Avatar
+  p Email: #{user.email}
+  p Name: #{user.name}
+  p Phone: #{user.phone}
+  p
+    a.mr-2.btn.btn-primary(href="/profile/update") Update Profile
+    a.btn.btn-primary(href="/profile/password") Change Password

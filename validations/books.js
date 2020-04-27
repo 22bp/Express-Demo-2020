@@ -37,7 +37,7 @@ module.exports.edit = (req, res, next) => {
     if (errors.length) {
       return res.render("books/edit-book", { errors, values: req.body, book });
     }
-    res.book = book;
+    req.book = book;
     next();
   } else {
     res.render("404", { resource: "Book" });

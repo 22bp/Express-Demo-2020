@@ -12,12 +12,12 @@ var books = db.get("books").value();
 module.exports.index = (req, res) => {
   var transactions;
 
-  if (res.user.isAdmin) {
+  if (req.user.isAdmin) {
     transactions = db.get("transactions").value();
   } else {
     transactions = db
       .get("transactions")
-      .filter({ user: res.user.id })
+      .filter({ user: req.user.id })
       .value();
     console.log(transactions);
   }
@@ -104,10 +104,10 @@ module.exports.postEdit = (req, res) => {
     req.body.books = [req.body.books];
   }
   db.get("transactions")
-    .find({ id: res.transaction.id })
+    .find({ id: req.transaction.id })
     .assign(req.body)
     .write();
-  res.redirect("/transactions/" + res.transaction.id + "/view");
+  res.redirect("/transactions/" + req.transaction.id + "/view");
 };
 
 // Delete transaction

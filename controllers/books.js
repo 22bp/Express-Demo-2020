@@ -1,4 +1,6 @@
 const shortid = require("shortid");
+const cloudinary = require("cloudinary").v2;
+
 const db = require("../db");
 const calPagination = require("../utils/pagination");
 
@@ -42,13 +44,30 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.postAdd = (req, res) => {
-  var newBook = req.body;
-  newBook.id = shortid.generate();
+  if (res.locals.user.isAdmin) {
+    var newBook = req.body;
+    newBook.id = shortid.generate();
 
-  db.get("books")
-    .push(newBook)
-    .write();
-  res.redirect("/books");
+    if (req.file && req.file.path) {
+      cloudinary.uploader.upload(
+        req.file.path,
+        { public_id: "BookManagement/Books/" + req.file.filename },
+        function(error, result) {
+          newBook.coverUrl = result.url;
+          db.get("books")
+            .push(newBook)
+            .write();
+          res.redirect("/books");
+        }
+      );
+    } else {
+      newBook.coverUrl = "/uploads/books/371f645d721a5be1f722fa80f22b5fc8";
+      db.get("books")
+        .push(newBook)
+        .write();
+      res.redirect("/books");
+    }
+  }
 };
 
 // Edit book
@@ -65,11 +84,28 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.postEdit = (req, res) => {
-  db.get("books")
-    .find({ id: res.book.id })
-    .assign(req.body)
-    .write();
-  res.redirect("/books/" + res.book.id + "/view");
+  if (res.locals.user.isAdmin) {
+    if (req.file && req.file.path) {
+      cloudinary.uploader.upload(
+        req.file.path,
+        { public_id: "BookManagement/Books/" + req.file.filename },
+        function(error, result) {
+          req.body.coverUrl = result.url;
+          db.get("books")
+            .find({ id: req.book.id })
+            .assign(req.body)
+            .write();
+          res.redirect("/books/" + req.book.id + "/view");
+        }
+      );
+    } else {
+      db.get("books")
+        .find({ id: req.book.id })
+        .assign(req.body)
+        .write();
+      res.redirect("/books/" + req.book.id + "/view");
+    }
+  }
 };
 
 // Delete book

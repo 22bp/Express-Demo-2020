@@ -49,6 +49,7 @@ module.exports.postAdd = (req, res) => {
   var newUser = req.body;
   newUser.id = shortid.generate();
   newUser.isAdmin = false;
+  newUser.avatarUrl = '/uploads/avatars/f648dfdd0b3a85231de874e91f694070';
 
   var hash = bcrypt.hashSync(newUser.password, 10);
   newUser.password = hash;
@@ -74,10 +75,10 @@ module.exports.edit = (req, res) => {
 
 module.exports.postEdit = (req, res) => {
   db.get("users")
-    .find({ id: res.user.id })
+    .find({ id: req.user.id })
     .assign(req.body)
     .write();
-  res.redirect("/users/" + res.user.id + "/view");
+  res.redirect("/users/" + req.user.id + "/view");
 };
 
 // Delete user

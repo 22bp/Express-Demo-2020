@@ -59,7 +59,7 @@ module.exports.edit = (req, res, next) => {
       return res.render("users/edit-user", { errors, values: req.body, user });
     }
 
-    res.user = user;
+    req.user = user;
     next();
   } else {
     res.render("404", { resource: "User" });

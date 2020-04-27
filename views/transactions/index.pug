@@ -1,11 +1,12 @@
 extends ../layout
 block content
-  h1 Transactions
+  h1 
+    span.mr-2 Transactions
+    if user && user.isAdmin  
+      a.btn.btn-success(href='/transactions/create') Add new
   form.form-inline(action='/transactions', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter transaction id")
     button.btn.btn-primary(type='submit') Search
-  p
-    a.btn.btn-primary(href='/transactions/create') Add new
   table.table.table-bordered
     thead
       tr
@@ -27,8 +28,9 @@ block content
               a(href='/transactions/' + transaction.id + '/complete') No
           td(class="actions")
             a.btn.btn-primary(href='/transactions/' + transaction.id + '/view') View
-            a.btn.btn-warning(href='/transactions/' + transaction.id + '/edit') Edit
-            a.btn.btn-danger(href='/transactions/' + transaction.id + '/delete') Delete
+            if user && user.isAdmin 
+              a.btn.btn-warning(href='/transactions/' + transaction.id + '/edit') Edit
+              a.btn.btn-danger(href='/transactions/' + transaction.id + '/delete') Delete
   nav(aria-label='...')
     ul.pagination
       li.page-item(class=pagination.prev ? "" : "disabled")

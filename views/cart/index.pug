@@ -1,0 +1,28 @@
+extends ../layout
+block content
+  h1 Cart
+  table.table.table-bordered
+    thead
+      tr
+        th Cover
+        th Title
+        th Actions
+    tbody
+      each book in cart
+        tr
+          td
+            img(src=book.coverUrl, style="width: 60px")
+          td.book-title #{book.title}
+          td(class="actions")
+            .btn-group.mr-2(role='group', aria-label='First group')
+              a.btn.btn-secondary.mr-0(href='/cart/decrease/' + book.id) -
+              form.form-number(action='/cart/number/' + book.id, method='GET')
+                input.form-control.cart-num(name='number' type='number' value=book.quantity)
+              a.btn.btn-secondary(href='/cart/increase/' + book.id) +
+            a.btn.btn-danger(href='/cart/delete/' + book.id ) Delete
+      tr
+        td
+        td
+        td
+          if countCart
+            a.btn.btn-success(href='/cart/transaction') Make Transaction

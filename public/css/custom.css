@@ -1,0 +1,33 @@
+table {
+  width: 100%; 
+  text-align: center;
+}
+
+.actions .btn {
+  margin-right: 5px;
+}
+
+.image-avatar {
+  width: 100px;
+}
+
+.cart-num {
+  text-align: center;
+  width: 45px;
+  margin: 0 -3px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-number {
+  margin-bottom: 0;
+}
+
+.book-title {
+  max-width: 100px;
+}

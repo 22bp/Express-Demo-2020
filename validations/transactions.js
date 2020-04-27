@@ -52,7 +52,7 @@ module.exports.edit = (req, res, next) => {
       });
     }
 
-    res.transaction = transaction;
+    req.transaction = transaction;
     next();
   } else {
     res.render("404", { resource: "Transaction" });

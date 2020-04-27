@@ -47,7 +47,7 @@ module.exports.login = (req, res, next) => {
     .find({ id: user.id })
     .assign({ wrongLoginCount: 0 })
     .write();
-  res.user = user;
+  req.user = user;
 
   next();
 };
