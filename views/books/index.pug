@@ -2,23 +2,30 @@ extends ../layout
 block content
   h1 
     span.mr-2 Books
-    a.btn.btn-success(href='/books/add') Add new
+    if user && user.isAdmin 
+      a.btn.btn-success(href='/books/add') Add new
   form.form-inline(action='/books', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter book's name")
     button.btn.btn-primary(type='submit') Search
   table.table.table-bordered
     thead
       tr
+        th Cover
         th Title
         th Actions
     tbody
       each book in books
         tr
-          td #{book.title}
+          td
+            img(src=book.coverUrl, style="width: 60px")
+          td.book-title #{book.title}
           td(class="actions")
             a.btn.btn-primary(href='/books/' + book.id + '/view') View
-            a.btn.btn-warning(href='/books/' + book.id + '/edit') Edit
-            a.btn.btn-danger(href='/books/' + book.id + '/delete') Delete
+            if user && user.isAdmin
+              a.btn.btn-warning(href='/books/' + book.id + '/edit') Edit
+              a.btn.btn-danger(href='/books/' + book.id + '/delete') Delete
+            else
+              a.btn.btn-success(href='/cart/add/' + book.id) Add To Cart
   nav(aria-label='...')
     ul.pagination
       li.page-item(class=pagination.prev ? "" : "disabled")

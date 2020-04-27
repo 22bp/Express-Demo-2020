@@ -24,7 +24,7 @@ module.exports.avatar = (req, res, next) => {
   }
 
   if (errors.length) {
-    return res.render("profile/avatar", { errors, avatarUrl: res.user.avatarUrl });
+    return res.render("profile/avatar", { errors, avatarUrl: req.user.avatarUrl });
   }
 
   next();

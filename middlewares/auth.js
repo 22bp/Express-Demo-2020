@@ -1,5 +1,20 @@
 const db = require("../db");
 
+module.exports.getUser = (req, res, next) => {
+  if (req.signedCookies.userId) {
+    var user = db
+      .get("users")
+      .find({ id: req.signedCookies.userId })
+      .value();
+
+    res.locals.user = user;
+
+    next();
+  } else {
+    next();
+  }
+};
+
 module.exports.requiredAuth = (req, res, next) => {
   if (req.signedCookies.userId) {
     var user = db
@@ -11,8 +26,7 @@ module.exports.requiredAuth = (req, res, next) => {
       return res.redirect("/auth/login");
     }
 
-    res.locals.user = user;
-    res.user = user;
+    req.user = user;
     next();
   } else {
     return res.redirect("/auth/login");
@@ -20,8 +34,24 @@ module.exports.requiredAuth = (req, res, next) => {
 };
 
 module.exports.requiredAdmin = (req, res, next) => {
-  if (!res.user.isAdmin) {
-    return res.redirect("/transactions");
+  if (req.signedCookies.userId) {
+    var user = db
+      .get("users")
+      .find({ id: req.signedCookies.userId })
+      .value();
+
+    if (!user) {
+      return res.redirect("/auth/login");
+    }
+
+    if (!user.isAdmin) {
+      return res.redirect("/transactions");
+    }
+
+    req.user = user;
+    next();
+  } else {
+    return res.redirect("/books");
   }
 
   next();

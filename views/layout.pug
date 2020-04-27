@@ -2,7 +2,7 @@ html
   head
     link(rel='shortcut icon', href='https://cdn.glitch.com/ab954107-2ac2-49a2-9682-ac89d54cd529%2Ffavicon.png?v=1587556003921')
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css')
-    link(rel='stylesheet', type='text/css', href='custom.css')
+    link(rel='stylesheet', type='text/css', href='/css/custom.css')
   body
     nav.navbar.navbar-expand-sm.navbar-dark.bg-dark
       a.navbar-brand(href='/books') Book Management
@@ -14,14 +14,20 @@ html
             a.nav-link(href='/books') Books
               span.sr-only (current)
           if user && user.isAdmin
-            li.nav-item
+            li.nav-item.active
               a.nav-link(href='/users') Users
-          li.nav-item
-            a.nav-link(href='/transactions') Transactions
-          li.nav-item
-            a.nav-link(href='/profile') Profile
+          if user
+            li.nav-item.active
+              a.nav-link(href='/transactions') Transactions
+            li.nav-item.active
+              a.nav-link(href='/profile') Profile
+          else
+            li.nav-item.active
+              a.nav-link(href='/auth/login') Login
+        span.navbar-text.mr-2 
+          a(href='/cart') Cart (#{countCart})
         if user
-          span.navbar-text Hi #{user.name}
+          span.navbar-text.mr-2 Hi #{user.name}
 
     .container.mt-3
       block content
@@ -29,3 +35,4 @@ html
     script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js', integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n', crossorigin='anonymous')
     script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
     script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
+    script(src="/js/main.js")
