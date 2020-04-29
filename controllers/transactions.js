@@ -1,25 +1,16 @@
-const shortid = require("shortid");
-const db = require("../db");
 const calPagination = require("../utils/pagination");
-
-var users = db
-  .get("users")
-  .filter({ isAdmin: false })
-  .value();
-var books = db.get("books").value();
+const Book = require("../models/Book");
+const User = require("../models/User");
+const Transaction = require("../models/Transaction");
 
 // Show all transactions
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
   var transactions;
 
   if (req.user.isAdmin) {
-    transactions = db.get("transactions").value();
+    transactions = await Transaction.find();
   } else {
-    transactions = db
-      .get("transactions")
-      .filter({ user: req.user.id })
-      .value();
-    console.log(transactions);
+    transactions = await Transaction.find({ user: req.user.id });
   }
 
   var filtered = [...transactions];
@@ -42,103 +33,92 @@ module.exports.index = (req, res) => {
 };
 
 // Show transaction
-module.exports.view = (req, res) => {
-  var transaction = db
-    .get("transactions")
-    .find({ id: req.params.id })
-    .value();
+module.exports.view = async (req, res) => {
+  var transaction = await Transaction.findById(req.params.id).populate("books user");
 
-  if (transaction) {
-    var user = db
-      .get("users")
-      .find({ id: transaction.user })
-      .value();
-    var books = [];
-    transaction.books.forEach(bookId => {
-      var book = db
-        .get("books")
-        .find({ id: bookId })
-        .value();
-      books.push(book);
-    });
-    res.render("transactions/view-transaction", { transaction, user, books });
-  } else {
-    res.render("404", { resource: "Transaction" });
+  if (!transaction) {
+    return res.render("404", { resource: "Transaction" });
   }
+
+  res.render("transactions/view-transaction", { transaction });
 };
 
 // Create transaction
-module.exports.create = (req, res) => {
+module.exports.create = async (req, res) => {
+  var books = await Book.find();
+  var users = await User.find({ isAdmin: false });
+
   res.render("transactions/create-transaction", { users, books });
 };
 
-module.exports.postCreate = (req, res) => {
+module.exports.postCreate = async (req, res) => {
   if (typeof req.body.books === "string") {
     req.body.books = [req.body.books];
   }
   var newTransaction = req.body;
-  newTransaction.id = shortid.generate();
-  newTransaction.isComplete = false;
 
-  db.get("transactions")
-    .push(newTransaction)
-    .write();
+  await Transaction.create(newTransaction);
+
   res.redirect("/transactions");
 };
 
 // Edit transaction
-module.exports.edit = (req, res) => {
-  var transaction = db
-    .get("transactions")
-    .find({ id: req.params.id })
-    .value();
-  if (transaction) {
-    res.render("transactions/edit-transaction", { transaction, users, books });
-  } else {
-    res.render("404", { resource: "Transaction" });
+module.exports.edit = async (req, res) => {
+  var transaction = await Transaction.findById(req.params.id);
+  if (!transaction) {
+    return res.render("404", { resource: "Transaction" });
   }
+
+  var books = await Book.find();
+  var users = await User.find({ isAdmin: false });
+
+  res.render("transactions/edit-transaction", { transaction, users, books });
 };
 
-module.exports.postEdit = (req, res) => {
-  if (typeof req.body.books === "string") {
-    req.body.books = [req.body.books];
+module.exports.postEdit = async (req, res) => {
+  var transaction = await Transaction.findById(req.params.id);
+
+  if (!transaction) {
+    return res.render("404", { resource: "Transaction" });
   }
-  db.get("transactions")
-    .find({ id: req.transaction.id })
-    .assign(req.body)
-    .write();
+
+  if (typeof req.body.books === "string") {
+    transaction.books = [req.body.books];
+  } else {
+    transaction.books = req.body.books;
+  }
+
+  transaction.user = req.body.user;
+
+  await transaction.save();
+
   res.redirect("/transactions/" + req.transaction.id + "/view");
 };
 
 // Delete transaction
-module.exports.deleteTran = (req, res) => {
-  var transaction = db
-    .get("transactions")
-    .find({ id: req.params.id })
-    .value();
-  if (transaction) {
-    db.get("transactions")
-      .remove({ id: transaction.id })
-      .write();
-    res.redirect("/transactions");
-  } else {
-    res.render("404", { resource: "Transaction" });
+module.exports.deleteTran = async (req, res) => {
+  var transaction = await Transaction.findById(req.params.id);
+
+  if (!transaction) {
+    return res.render("404", { resource: "Transaction" });
   }
+
+  await transaction.remove();
+
+  res.redirect("/transactions");
 };
 
 // Complete transaction
-module.exports.complete = (req, res) => {
-  var transaction = db
-    .get("transactions")
-    .find({ id: req.params.id })
-    .value();
-  if (transaction) {
-    db.get("transactions")
-      .find({ id: transaction.id })
-      .assign({ isComplete: !transaction.isComplete })
-      .write();
-    res.redirect("/transactions");
-  } else {
-    res.render("404", { resource: "Transaction" });
+module.exports.complete = async (req, res) => {
+  var transaction = await Transaction.findById(req.params.id);
+
+  if (!transaction) {
+    return res.render("404", { resource: "Transaction" });
   }
+
+  transaction.isComplete = !transaction.isComplete;
+
+  await transaction.save();
+
+  res.redirect("/transactions");
 };

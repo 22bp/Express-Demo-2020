@@ -3,6 +3,8 @@ const router = express.Router();
 
 const { add, index, deleteBook, decrease, increase, number, transaction } = require("../controllers/cart");
 
+const { requiredAuth } = require('../middlewares/auth');
+
 // Add to cart
 router.get("/add/:bookId", add);
 
@@ -18,6 +20,6 @@ router.get("/increase/:bookId", increase);
 router.get("/number/:bookId", number);
 
 // Make transaction
-router.get("/transaction", transaction);
+router.get("/transaction", requiredAuth, transaction);
 
 module.exports = router;

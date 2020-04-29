@@ -1,41 +1,48 @@
-const db = require("../db");
 const bcrypt = require("bcrypt");
 const sendEmail = require("../utils/sendEmail");
 
-module.exports.login = (req, res, next) => {
-  var errors = [];
-  var user = null;
+const User = require("../models/User");
 
-  if (req.body.email === "") {
+module.exports.login = async (req, res, next) => {
+  var errors = [];
+
+  // Check empty email & password
+  if (!req.body.email) {
     errors.push("Email is required");
   }
-
-  if (req.body.password === "") {
+  if (!req.body.password) {
     errors.push("Password is required");
-  } else {
-    user = db
-      .get("users")
-      .find({ email: req.body.email })
-      .value();
+  }
 
-    if (!user) {
-      errors.push("User doesn't exist");
+  // Check user
+  var user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    errors.push("User doesn't exist");
+  }
+
+  // If wrong login over 3 times
+  if (user.wrongLoginCount >= 4) {
+    user.wrongLoginCount += 1;
+    await user.save();
+
+    errors.push("Locked account for wrong login over 3 times.");
+    return res.render("auth/login", { errors, values: req.body });
+  }
+
+  // Check password
+  var result = await bcrypt.compare(req.body.password, user.password);
+  if (!result) {
+    user.wrongLoginCount += 1;
+    await user.save();
+
+    if (user.wrongLoginCount <= 3) {
+      errors.push("Wrong password");
     } else {
-      if (user.wrongLoginCount >= 3) {
-        errors.push("Locked account for wrong login over 4 times.");
+      errors.push("Locked account for wrong login over 3 times.");
 
-        sendEmail(user.email);
+      await sendEmail(user.email);
 
-        return res.render("auth/login", { errors });
-      }
-      var result = bcrypt.compareSync(req.body.password, user.password);
-      if (!result) {
-        db.get("users")
-          .find({ id: user.id })
-          .assign({ wrongLoginCount: user.wrongLoginCount + 1 })
-          .write();
-        errors.push("Wrong password");
-      }
+      return res.render("auth/login", { errors, values: req.body });
     }
   }
 
@@ -43,42 +50,51 @@ module.exports.login = (req, res, next) => {
     return res.render("auth/login", { errors, values: req.body });
   }
 
-  db.get("users")
-    .find({ id: user.id })
-    .assign({ wrongLoginCount: 0 })
-    .write();
+  // Login success
+  user.wrongLoginCount = 0;
+  await user.save();
+
   req.user = user;
 
   next();
 };
 
-module.exports.register = (req, res, next) => {
+module.exports.register = async (req, res, next) => {
   var errors = [];
 
-  if (req.body.email === "") {
+  // Check email
+  if (!req.body.email) {
     errors.push("Email is required");
   } else {
-    var user = db
-      .get("users")
-      .find({ email: req.body.email })
-      .value();
+    // Check unique email
+    var user = await User.findOne({ email: req.body.email });
     if (user) {
       errors.push("Email already used");
     }
   }
 
-  if (req.body.password === "") {
+  // Check password
+  if (!req.body.password) {
     errors.push("Password is required");
   } else if (req.body.password.length < 6) {
     errors.push("Password must equal or more 6 chars");
   }
 
+  // Check password confirm
+  if (req.body.password2 === "") {
+    errors.push("Password Confirm is required");
+  } else if (req.body.password !== req.body.password2) {
+    errors.push("Password Confirm wrong");
+  }
+
+  // Check name
   if (req.body.name === "") {
     errors.push("Name is required");
   } else if (req.body.name.length > 30) {
     errors.push("Name is not over 30 chars");
   }
 
+  // Check phone
   if (req.body.phone === "") {
     errors.push("Phone is required");
   }

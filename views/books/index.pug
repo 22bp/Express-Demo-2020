@@ -2,7 +2,7 @@ extends ../layout
 block content
   h1 
     span.mr-2 Books
-    if user && user.isAdmin 
+    if userMain && userMain.isAdmin 
       a.btn.btn-success(href='/books/add') Add new
   form.form-inline(action='/books', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter book's name")
@@ -21,7 +21,7 @@ block content
           td.book-title #{book.title}
           td(class="actions")
             a.btn.btn-primary(href='/books/' + book.id + '/view') View
-            if user && user.isAdmin
+            if userMain && userMain.isAdmin
               a.btn.btn-warning(href='/books/' + book.id + '/edit') Edit
               a.btn.btn-danger(href='/books/' + book.id + '/delete') Delete
             else

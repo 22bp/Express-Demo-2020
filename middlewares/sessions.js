@@ -1,38 +1,30 @@
-const db = require("../db");
-const shortid = require("shortid");
+const CartSession = require("../models/CartSession");
 
-module.exports.cartSession = (req, res, next) => {
+module.exports.cartSession = async (req, res, next) => {
+  var cartSession;
+  // If not Cart Session
   if (!req.signedCookies.cartSession) {
-    res.cookie("cartSession", shortid.generate(), { signed: true });
+    cartSession = await CartSession.create({ cart: [] });
 
-    var newCart = {};
-    newCart.id = shortid.generate();
-
-    if (res.locals.user) {
-      newCart.user = res.locals.user.id;
+    if (res.locals.userMain) {
+      cartSession.user = res.locals.userMain.id;
     }
 
-    db.get("cartSessions")
-      .push(newCart)
-      .write();
+    await cartSession.save();
+
+    res.cookie("cartSession", cartSession.id, { signed: true });
+  } else {
+    cartSession = await CartSession.findById(req.signedCookies.cartSession);
   }
 
   // Count cart
-  console.log(req.signedCookies.cartSession);
-  var cartSession = db
-    .get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .value();
-
-  var cart = cartSession.cart || {};
-  
   var count = 0;
-  for (let bookId in cart) {
-    count += cart[bookId];
+  if (cartSession.cart) {
+    for (let item of cartSession.cart) {
+      count += item.quantity;
+    }
   }
-  
-  res.locals.countCart = count;
-  res.locals.cartSession = cartSession;
 
+  res.locals.countCart = count;
   next();
 };

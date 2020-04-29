@@ -2,7 +2,7 @@ extends ../layout
 block content
   h1 
     span.mr-2 Transactions
-    if user && user.isAdmin  
+    if userMain && userMain.isAdmin  
       a.btn.btn-success(href='/transactions/create') Add new
   form.form-inline(action='/transactions', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter transaction id")
@@ -10,7 +10,6 @@ block content
   table.table.table-bordered
     thead
       tr
-        th ID
         th User
         th Books
         th Finish
@@ -18,7 +17,6 @@ block content
     tbody
       each transaction in transactions
         tr
-          td #{transaction.id}
           td #{transaction.user}
           td #{transaction.books.length}
           td
@@ -28,7 +26,7 @@ block content
               a(href='/transactions/' + transaction.id + '/complete') No
           td(class="actions")
             a.btn.btn-primary(href='/transactions/' + transaction.id + '/view') View
-            if user && user.isAdmin 
+            if userMain && userMain.isAdmin 
               a.btn.btn-warning(href='/transactions/' + transaction.id + '/edit') Edit
               a.btn.btn-danger(href='/transactions/' + transaction.id + '/delete') Delete
   nav(aria-label='...')

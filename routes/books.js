@@ -23,17 +23,17 @@ router.get("/", index);
 // Show single book
 router.get("/:id/view", view);
 
-router.post("/add", upload.single('cover'), validations.add, postAdd);
-
-router.post("/:id/edit", upload.single('cover'), validations.edit, postEdit);
-
 router.use(requiredAdmin);
 
 // Add book
 router.get("/add", add);
 
+router.post("/add", upload.single('cover'), validations.add, postAdd);
+
 // Edit book
 router.get("/:id/edit", edit);
+
+router.post("/:id/edit", upload.single('cover'), validations.edit, postEdit);
 
 // Delete book
 router.get("/:id/delete", deleteBook);

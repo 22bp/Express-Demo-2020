@@ -1,6 +1,6 @@
-const db = require("../db");
-const shortid = require("shortid");
 const bcrypt = require("bcrypt");
+
+const User = require("../models/User");
 
 // Login
 module.exports.login = (req, res) => {
@@ -9,7 +9,8 @@ module.exports.login = (req, res) => {
 
 module.exports.postLogin = (req, res) => {
   res.cookie("userId", req.user.id, { signed: true });
-  res.redirect("/transactions");
+  
+  res.redirect('/transactions');
 };
 
 // Register
@@ -17,20 +18,14 @@ module.exports.register = (req, res) => {
   res.render("auth/register");
 };
 
-module.exports.postRegister = (req, res) => {
+module.exports.postRegister = async (req, res) => {
   var newUser = req.body;
-  newUser.id = shortid.generate();
-  newUser.isAdmin = false;
-  newUser.avatarUrl = "/uploads/avatars/f648dfdd0b3a85231de874e91f694070";
 
-  var hash = bcrypt.hashSync(newUser.password, 10);
-  newUser.password = hash;
+  newUser.password = await bcrypt.hash(newUser.password, 10);
 
-  var user = db
-    .get("users")
-    .push(newUser)
-    .write();
+  var user = await User.create(newUser);
 
-  res.cookie("userId", newUser.id, { signed: true });
+  res.cookie("userId", user.id, { signed: true });
+
   res.redirect("/transactions");
 };

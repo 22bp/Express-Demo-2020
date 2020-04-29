@@ -1,4 +1,4 @@
-const db = require("../db");
+const Book = require('../models/Book');
 
 module.exports.add = (req, res, next) => {
   var errors = [];
@@ -18,11 +18,9 @@ module.exports.add = (req, res, next) => {
   next();
 };
 
-module.exports.edit = (req, res, next) => {
-  var book = db
-    .get("books")
-    .find({ id: req.params.id })
-    .value();
+module.exports.edit = async (req, res, next) => {
+  var book = await Book.findById(req.params.id);
+
   if (book) {
     var errors = [];
 
@@ -37,6 +35,7 @@ module.exports.edit = (req, res, next) => {
     if (errors.length) {
       return res.render("books/edit-book", { errors, values: req.body, book });
     }
+    
     req.book = book;
     next();
   } else {
