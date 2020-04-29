@@ -8,18 +8,18 @@ block content
         th Title
         th Actions
     tbody
-      each book in cart
+      each item in cart
         tr
           td
-            img(src=book.coverUrl, style="width: 60px")
-          td.book-title #{book.title}
+            img(src=item.book.coverUrl, style="width: 60px")
+          td.book-title #{item.book.title}
           td(class="actions")
             .btn-group.mr-2(role='group', aria-label='First group')
-              a.btn.btn-secondary.mr-0(href='/cart/decrease/' + book.id) -
-              form.form-number(action='/cart/number/' + book.id, method='GET')
-                input.form-control.cart-num(name='number' type='number' value=book.quantity)
-              a.btn.btn-secondary(href='/cart/increase/' + book.id) +
-            a.btn.btn-danger(href='/cart/delete/' + book.id ) Delete
+              a.btn.btn-secondary.mr-0(href='/cart/decrease/' + item.book.id) -
+              form.form-number(action='/cart/number/' + item.book.id, method='GET')
+                input.form-control.cart-num(name='number' type='number' value=item.quantity)
+              a.btn.btn-secondary(href='/cart/increase/' + item.book.id) +
+            a.btn.btn-danger(href='/cart/delete/' + item.book.id ) Delete
       tr
         td
         td

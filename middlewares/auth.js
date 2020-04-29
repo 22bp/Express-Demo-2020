@@ -1,75 +1,52 @@
-const db = require("../db");
+const User = require("../models/User");
 
-module.exports.getUser = (req, res, next) => {
+module.exports.getUser = async (req, res, next) => {
   if (req.signedCookies.userId) {
-    var user = db
-      .get("users")
-      .find({ id: req.signedCookies.userId })
-      .value();
+    var userMain = await User.findById(req.signedCookies.userId);
 
-    res.locals.user = user;
-
-    next();
-  } else {
-    next();
+    res.locals.userMain = userMain;
   }
+  
+  next();
 };
 
-module.exports.requiredAuth = (req, res, next) => {
-  if (req.signedCookies.userId) {
-    var user = db
-      .get("users")
-      .find({ id: req.signedCookies.userId })
-      .value();
-
-    if (!user) {
-      return res.redirect("/auth/login");
-    }
-
-    req.user = user;
-    next();
-  } else {
+module.exports.requiredAuth = async (req, res, next) => {
+  if (!req.signedCookies.userId) {
     return res.redirect("/auth/login");
   }
+
+  var user = await User.findById(req.signedCookies.userId);
+
+  if (!user) {
+    return res.redirect("/auth/login");
+  }
+
+  req.user = user;
+  next();
 };
 
-module.exports.requiredAdmin = (req, res, next) => {
-  if (req.signedCookies.userId) {
-    var user = db
-      .get("users")
-      .find({ id: req.signedCookies.userId })
-      .value();
+module.exports.requiredAdmin = async (req, res, next) => {
+  if (!req.signedCookies.userId) {
+    return res.redirect("/auth/login");
+  }
 
-    if (!user) {
-      return res.redirect("/auth/login");
-    }
-
-    if (!user.isAdmin) {
-      return res.redirect("/transactions");
-    }
-
-    req.user = user;
-    next();
-  } else {
+  if (!res.locals.userMain.isAdmin) {
     return res.redirect("/books");
   }
 
   next();
 };
 
-module.exports.loggedIn = (req, res, next) => {
-  if (!req.signedCookies.userId) {
-    next();
-  } else {
-    var user = db
-      .get("users")
-      .find({ id: req.signedCookies.userId })
-      .value();
+module.exports.loggedIn = async (req, res, next) => {
+  if (req.signedCookies.userId) {
+    var user = await User.findById(req.signedCookies.userId);
 
     if (!user) {
       return res.redirect("/auth/login");
     }
 
-    return res.redirect("/transactions");
+    next();
   }
+
+  next();
 };

@@ -6,6 +6,12 @@ block content
       .alert.alert-danger= error
     form(action='/users/'+ user.id + '/edit', method='POST')
       div.mb-2
+        label Email
+        input.form-control(name='email' type='email' value=values ? values.email : "")
+      div.mb-2
+        label Password
+        input.form-control(name='password' type='password')
+      div.mb-2
         label Name
         input.form-control(name='name' value=values ? values.name : "")
       div.mb-2
@@ -14,6 +20,12 @@ block content
       button.btn.btn-primary(type='submit') Save
   else
     form(action='/users/'+ user.id + '/edit', method='POST')
+      div.mb-2
+        label Email
+        input.form-control(name='email' type='email' value=user.email)
+      div.mb-2
+        label Password
+        input.form-control(name='password' type='password')
       div.mb-2
         label Name
         input.form-control(name='name' value=user.name)

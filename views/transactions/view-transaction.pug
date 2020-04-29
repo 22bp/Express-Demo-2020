@@ -2,10 +2,11 @@ extends ../layout
 block content
   h1 Transaction: #{transaction.id}
   div
-    h2 User: 
-    p Name: #{user.name} 
-    p Phone: #{user.phone}
+    h2 User: #{transaction.user._id}
+    p Email: #{transaction.user.email} 
+    p Name: #{transaction.user.name} 
+    p Phone: #{transaction.user.phone}
   div
     h2 Books: 
-    each book, index in books
+    each book, index in transaction.books
       p #{index + 1} - #{book.title}

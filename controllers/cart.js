@@ -1,145 +1,183 @@
-const db = require("../db");
-const shortid = require("shortid");
+const CartSession = require("../models/CartSession");
+const Transaction = require("../models/Transaction");
 
 // Add to cart
-module.exports.add = (req, res) => {
-  const count = db
-    .get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .get("cart." + req.params.bookId, 0)
-    .value();
+module.exports.add = async (req, res) => {
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-  db.get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .set("cart." + req.params.bookId, count + 1)
-    .write();
+  if (!cartSession) {
+    return res.redirect("/");
+  }
+
+  var cart = cartSession.cart;
+  if (cart.length) {
+    var existItem = null;
+    cart.forEach(item => {
+      if (item.book.toString() === req.params.bookId) {
+        item.quantity += 1;
+        existItem = item;
+      }
+    });
+
+    if (!existItem) {
+      cart.push({ book: req.params.bookId, quantity: 1 });
+    }
+  } else {
+    cart.push({ book: req.params.bookId, quantity: 1 });
+  }
+
+  await cartSession.save();
 
   res.redirect("/books");
 };
 
 // Index
-module.exports.index = (req, res) => {
-  var cart = [];
-  for (let bookId in res.locals.cartSession.cart) {
-    var book = db
-      .get("books")
-      .find({ id: bookId })
-      .value();
-    book.quantity = res.locals.cartSession.cart[bookId];
-    cart.push(book);
+module.exports.index = async (req, res) => {
+  var cartSession = await CartSession.findById(
+    req.signedCookies.cartSession
+  ).populate("cart.book");
+
+  if (!cartSession) {
+    return res.redirect("/");
   }
+
+  var cart = cartSession.cart;
 
   res.render("cart", { cart });
 };
 
 // Delete book
-module.exports.deleteBook = (req, res) => {
-  var cart = res.locals.cartSession.cart;
-  delete cart[req.params.bookId];
+module.exports.deleteBook = async (req, res) => {
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-  db.get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .assign({ cart })
-    .write();
+  if (!cartSession) {
+    return res.redirect("/");
+  }
+
+  var cart = cartSession.cart;
+
+  cart.forEach((item, index) => {
+    if (item.book.toString() === req.params.bookId) {
+      cart.splice(index, 1);
+    }
+  });
+
+  await cartSession.save();
 
   res.redirect("/cart");
 };
 
 // Decrease number
-module.exports.decrease = (req, res) => {
-  const count = db
-    .get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .get("cart." + req.params.bookId)
-    .value();
+module.exports.decrease = async (req, res) => {
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-  if (count <= 1) {
-    var cart = res.locals.cartSession.cart;
-    delete cart[req.params.bookId];
-
-    db.get("cartSessions")
-      .find({ id: req.signedCookies.cartSession })
-      .assign({ cart })
-      .write();
-  } else {
-    db.get("cartSessions")
-      .find({ id: req.signedCookies.cartSession })
-      .set("cart." + req.params.bookId, count - 1)
-      .write();
+  if (!cartSession) {
+    return res.redirect("/");
   }
 
+  var cart = cartSession.cart;
+
+  var count;
+  var indexItem;
+  cart.forEach((item, index) => {
+    if (item.book.toString() === req.params.bookId) {
+      count = item.quantity;
+      indexItem = index;
+    }
+  });
+
+  if (count <= 1) {
+    cart.splice(indexItem, 1);
+  } else {
+    cart[indexItem].quantity -= 1;
+  }
+
+  await cartSession.save();
   res.redirect("/cart");
 };
 
 // Increase number
-module.exports.increase = (req, res) => {
-  const count = db
-    .get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .get("cart." + req.params.bookId)
-    .value();
+module.exports.increase = async (req, res) => {
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-  db.get("cartSessions")
-    .find({ id: req.signedCookies.cartSession })
-    .set("cart." + req.params.bookId, count + 1)
-    .write();
+  if (!cartSession) {
+    return res.redirect("/");
+  }
 
+  var cart = cartSession.cart;
+
+  var count;
+  var indexItem;
+  cart.forEach((item, index) => {
+    if (item.book.toString() === req.params.bookId) {
+      count = item.quantity;
+      indexItem = index;
+    }
+  });
+
+  cart[indexItem].quantity += 1;
+
+  await cartSession.save();
   res.redirect("/cart");
 };
 
 // Change number
-module.exports.number = (req, res) => {
+module.exports.number = async (req, res) => {
   const number = parseInt(req.query.number);
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-  if (number <= 0) {
-    var cart = res.locals.cartSession.cart;
-    delete cart[req.params.bookId];
-
-    db.get("cartSessions")
-      .find({ id: req.signedCookies.cartSession })
-      .assign({ cart })
-      .write();
-  } else {
-    db.get("cartSessions")
-      .find({ id: req.signedCookies.cartSession })
-      .set("cart." + req.params.bookId, number)
-      .write();
+  if (!cartSession) {
+    return res.redirect("/");
   }
 
+  var cart = cartSession.cart;
+
+  var count;
+  var indexItem;
+  cart.forEach((item, index) => {
+    if (item.book.toString() === req.params.bookId) {
+      count = item.quantity;
+      indexItem = index;
+    }
+  });
+
+  if (number <= 0) {
+    cart.splice(indexItem, 1);
+  } else {
+    cart[indexItem].quantity = number;
+  }
+
+  await cartSession.save();
   res.redirect("/cart");
 };
 
 // Make transaction
-module.exports.transaction = (req, res) => {
-  if (res.locals.countCart) {
-    if (!res.locals.user) {
-      return res.redirect("/auth/login");
-    }
+module.exports.transaction = async (req, res) => {
+  var cartSession = await CartSession.findById(req.signedCookies.cartSession);
 
-    var cart = res.locals.cartSession.cart;
+  if (!cartSession) {
+    return res.redirect("/");
+  }
 
+  var cart = cartSession.cart;
+
+  if (cart.length) {
     // Create new transaction
     var books = [];
-    for (let bookId in cart) {
-      books.push(bookId);
+    for (let item of cart) {
+      books.push(item.book);
     }
 
     var newTransaction = {
-      id: shortid.generate(),
-      isComplete: false,
-      user: res.locals.user.id,
+      user: res.locals.userMain.id,
       books
     };
 
-    db.get("transactions")
-      .push(newTransaction)
-      .write();
+    await Transaction.create(newTransaction);
 
     // Delete books in cart
-    db.get("cartSessions")
-      .find({ id: req.signedCookies.cartSession })
-      .assign({ cart: {} })
-      .write();
+    cartSession.cart = [];
+    await cartSession.save();
 
     res.redirect("/transactions");
   }

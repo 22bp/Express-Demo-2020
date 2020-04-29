@@ -15,7 +15,7 @@ async function sendEmail(userEmail) {
   let info = await transporter.sendMail({
     from: '"Admin" <admin@book-management.com>',
     to: userEmail, // list of receivers
-    subject: "Wrong Login Over 3 times", // Subject line
+    subject: "Your Account Was Locked", // Subject line
     text:
       "Your account was locked because you logged in wrong over 3 times. Please contact to admin to unlock your account."
   });

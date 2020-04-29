@@ -1,15 +1,10 @@
-const shortid = require("shortid");
-const db = require("../db");
 const bcrypt = require("bcrypt");
 const calPagination = require("../utils/pagination");
-
-var users = db
-  .get("users")
-  .filter({ isAdmin: false })
-  .value();
+const User = require("../models/User");
 
 // Show all users
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
+  var users = await User.find({ isAdmin: false });
   var filtered = [...users];
 
   if (req.query.q) {
@@ -28,16 +23,14 @@ module.exports.index = (req, res) => {
 };
 
 // Show user
-module.exports.view = (req, res) => {
-  var user = db
-    .get("users")
-    .find({ id: req.params.id })
-    .value();
-  if (user) {
-    res.render("users/view-user", { user });
-  } else {
-    res.render("404", { resource: "User" });
+module.exports.view = async (req, res) => {
+  var user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.render("404", { resource: "User" });
   }
+
+  res.render("users/view-user", { user });
 };
 
 // Add user
@@ -45,54 +38,51 @@ module.exports.add = (req, res) => {
   res.render("users/add-user");
 };
 
-module.exports.postAdd = (req, res) => {
+module.exports.postAdd = async (req, res) => {
   var newUser = req.body;
-  newUser.id = shortid.generate();
-  newUser.isAdmin = false;
-  newUser.avatarUrl = '/uploads/avatars/f648dfdd0b3a85231de874e91f694070';
 
-  var hash = bcrypt.hashSync(newUser.password, 10);
-  newUser.password = hash;
+  newUser.password = await bcrypt.hash(newUser.password, 10);
 
-  db.get("users")
-    .push(newUser)
-    .write();
+  await User.create(newUser);
+
   res.redirect("/users");
 };
 
 // Edit user
-module.exports.edit = (req, res) => {
-  var user = db
-    .get("users")
-    .find({ id: req.params.id })
-    .value();
-  if (user) {
-    res.render("users/edit-user", { user });
-  } else {
-    res.render("404", { resource: "User" });
+module.exports.edit = async (req, res) => {
+  var user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.render("404", { resource: "User" });
   }
+
+  res.render("users/edit-user", { user });
 };
 
-module.exports.postEdit = (req, res) => {
-  db.get("users")
-    .find({ id: req.user.id })
-    .assign(req.body)
-    .write();
+module.exports.postEdit = async (req, res) => {
+  var user = await User.findById(req.params.id);
+
+  for (let x in req.body) {
+    if (x === "password") {
+      user.password = await bcrypt.hash(req.body.password, 10);
+    } else {
+      user[x] = req.body[x];
+    }
+  }
+
+  await user.save();
+
   res.redirect("/users/" + req.user.id + "/view");
 };
 
 // Delete user
-module.exports.deleteUser = (req, res) => {
-  var user = db
-    .get("users")
-    .find({ id: req.params.id })
-    .value();
-  if (user) {
-    db.get("users")
-      .remove({ id: user.id })
-      .write();
-    res.redirect("/users");
-  } else {
-    res.render("404", { resource: "User" });
+module.exports.deleteUser = async (req, res) => {
+  var user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.render("404", { resource: "User" });
   }
+
+  await user.remove();
+  res.redirect("/users");
 };
