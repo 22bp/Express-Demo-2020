@@ -13,12 +13,21 @@ mongoose
 const cloudinary = require("cloudinary").v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 
+// Routes Files
 const booksRoute = require("./routes/books");
 const usersRoute = require("./routes/users");
 const transactionsRoute = require("./routes/transactions");
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
 const cartRoute = require("./routes/cart");
+
+// API Routes Files
+const apiAuthRoute = require("./api/routes/auth");
+const apiTransactionsRoute = require("./api/routes/transactions");
+const apiBooksRoute = require("./api/routes/books");
+const apiUsersRoute = require("./api/routes/users");
+const apiProfileRoute = require("./api/routes/profile");
+const apiCartRoute = require("./api/routes/cart");
 
 const {
   requiredAuth,
@@ -36,6 +45,14 @@ app.use(cookieParser(process.env.SECRET_COOKIE));
 
 app.set("view engine", "pug");
 app.set("views", "./views");
+
+// API Routes
+app.use("/api/auth", apiAuthRoute);
+app.use("/api/transactions", apiTransactionsRoute);
+app.use("/api/books", apiBooksRoute);
+app.use("/api/users", apiUsersRoute);
+app.use("/api/profile", apiProfileRoute);
+app.use("/api/cart", apiCartRoute);
 
 // Routes
 app.use(getUser);
