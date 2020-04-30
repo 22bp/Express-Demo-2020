@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../../utils/sendEmail");
 
-const User = require("../models/User");
+const User = require("../../models/User");
 
 module.exports.login = async (req, res, next) => {
   var errors = [];
@@ -18,7 +18,7 @@ module.exports.login = async (req, res, next) => {
   var user = await User.findOne({ email: req.body.email });
   if (!user) {
     errors.push("User doesn't exist");
-    return res.render("auth/login", { errors, values: req.body });
+    return res.status(400).json({ errors, values: req.body });
   }
 
   // If wrong login over 3 times
@@ -27,7 +27,7 @@ module.exports.login = async (req, res, next) => {
     await user.save();
 
     errors.push("Blocked account for wrong login over 3 times.");
-    return res.render("auth/login", { errors, values: req.body });
+    return res.status(400).json({ errors, values: req.body });
   }
 
   // Check password
@@ -43,12 +43,12 @@ module.exports.login = async (req, res, next) => {
 
       await sendEmail(user.email);
 
-      return res.render("auth/login", { errors, values: req.body });
+      return res.status(400).json({ errors, values: req.body });
     }
   }
 
   if (errors.length) {
-    return res.render("auth/login", { errors, values: req.body });
+    return res.status(400).json({ errors, values: req.body });
   }
 
   // Login success
@@ -101,7 +101,7 @@ module.exports.register = async (req, res, next) => {
   }
 
   if (errors.length) {
-    return res.render("auth/register", { errors, values: req.body });
+    return res.status(400).json({ errors, values: req.body });
   }
 
   next();
