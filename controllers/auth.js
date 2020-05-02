@@ -1,16 +1,25 @@
 const bcrypt = require("bcrypt");
 
 const User = require("../models/User");
+const Shop = require("../models/Shop");
 
 // Login
 module.exports.login = (req, res) => {
   res.render("auth/login");
 };
 
-module.exports.postLogin = (req, res) => {
+module.exports.postLogin = async (req, res) => {
   res.cookie("userId", req.user.id, { signed: true });
-  
-  res.redirect('/transactions');
+
+  var shop = await Shop.findOne({ user: req.user.id });
+
+  if (shop) {
+    res.cookie("shopId", shop.id, { signed: true });
+  } else {
+    res.cookie("shopId", "");
+  }
+
+  res.redirect("/transactions");
 };
 
 // Register

@@ -1,0 +1,17 @@
+extends ../layout
+block content
+  h1 Create shop
+  if errors
+    each error in errors
+      .alert.alert-danger= error
+    form(action='/shops/create', method='POST')
+      div.mb-2
+        h2 Name's shop
+        input.form-control.toCapitalize(name='name' value=values ? values.name : "")
+      button.btn.btn-primary(type='submit') Create
+  else
+    form(action='/shops/create', method='POST')
+      div.mb-2
+        h2 Name's shop
+        input.form-control.toCapitalize(name='name')
+      button.btn.btn-primary(type='submit') Create

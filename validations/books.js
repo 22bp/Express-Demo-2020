@@ -3,11 +3,11 @@ const Book = require('../models/Book');
 module.exports.add = (req, res, next) => {
   var errors = [];
 
-  if (req.body.title === "") {
+  if (!req.body.title) {
     errors.push("Title is required");
   }
 
-  if (req.body.description === "") {
+  if (!req.body.description) {
     errors.push("Description is required");
   }
 
@@ -24,11 +24,11 @@ module.exports.edit = async (req, res, next) => {
   if (book) {
     var errors = [];
 
-    if (req.body.title === "") {
+    if (!req.body.title) {
       errors.push("Title is required");
     }
 
-    if (req.body.description === "") {
+    if (!req.body.description) {
       errors.push("Description is required");
     }
 

@@ -25,7 +25,7 @@ module.exports.index = async (req, res) => {
 
 // Show book
 module.exports.view = async (req, res) => {
-  var book = await Book.findById(req.params.id);
+  var book = await Book.findById(req.params.id).populate("shop");
 
   if (!book) {
     return res.render("404", { resource: "Book" });

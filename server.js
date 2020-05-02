@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .then(() => console.log("MongoDB Connected"));
 
@@ -20,6 +21,7 @@ const transactionsRoute = require("./routes/transactions");
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
 const cartRoute = require("./routes/cart");
+const shopsRoute = require("./routes/shops");
 
 // API Routes Files
 const apiAuthRoute = require("./api/routes/auth");
@@ -63,6 +65,7 @@ app.get("/", (req, res) => res.redirect("/books"));
 app.use("/auth", loggedIn, authRoute);
 app.use("/books", booksRoute);
 app.use("/cart", cartRoute);
+app.use("/shops", shopsRoute);
 
 app.use(requiredAuth);
 

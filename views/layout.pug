@@ -16,18 +16,25 @@ html
           if userMain && userMain.isAdmin
             li.nav-item.active
               a.nav-link(href='/users') Users
+            li.nav-item.active
+              a.nav-link(href='/shops') Shops
+          li.nav-item.active
+            a.nav-link(href='/cart') Cart (#{countCart})
+        ul.navbar-nav
           if userMain
-            li.nav-item.active
-              a.nav-link(href='/transactions') Transactions
-            li.nav-item.active
-              a.nav-link(href='/profile') Profile
+            li.nav-item.dropdown.mr-5
+              a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Hi #{userMain.name}
+              .dropdown-menu(aria-labelledby='navbarDropdown')
+                a.dropdown-item(href='/transactions') Transactions
+                a.dropdown-item(href='/profile') Profile
+                .dropdown-divider
+                if shopMain
+                  a.dropdown-item(href='/shops/' + shopMain.id + '/books') My shop
+                else
+                  a.dropdown-item(href='/shops/create') Create your shop
           else
             li.nav-item.active
               a.nav-link(href='/auth/login') Login
-        span.navbar-text.mr-2 
-          a(href='/cart') Cart (#{countCart})
-        if userMain
-          span.navbar-text.mr-2 Hi #{userMain.name}
 
     .container.mt-3
       block content
