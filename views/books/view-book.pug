@@ -2,8 +2,10 @@ extends ../layout
 block content
   h1 #{book.title}
   p
-    img(src=book.coverUrl)
+    img(src=book.coverUrl style="width: 300px;")
   p
     a.btn.btn-success(href='/cart/add/' + book.id) Add To Cart
+  if book.shop
+    p.toCapitalize Shop: #{book.shop.name}
   p Description: 
   p #{book.description}

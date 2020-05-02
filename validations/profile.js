@@ -1,11 +1,11 @@
 module.exports.update = (req, res, next) => {
   var errors = [];
 
-  if (req.body.name === "") {
+  if (!req.body.name) {
     errors.push("Name is required");
   }
 
-  if (req.body.phone === "") {
+  if (!req.body.phone) {
     errors.push("Phone is required");
   }
 
@@ -33,13 +33,13 @@ module.exports.avatar = (req, res, next) => {
 module.exports.password = (req, res, next) => {
   var errors = [];
 
-  if (req.body.password === "") {
+  if (!req.body.password) {
     errors.push("Password is required");
   } else if (req.body.password.length < 6) {
     errors.push("Password must equal or more 6 chars");
   }
   
-  if (req.body.password2 === "") {
+  if (!req.body.password2) {
     errors.push("Password Confirm is required");
   } else if (req.body.password !== req.body.password2) {
     errors.push("Password Confirm incorrect")

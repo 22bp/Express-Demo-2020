@@ -1,18 +1,21 @@
-# Book Management API
-Backend API for Book Management application
+# Book Management App & API
+- Book Management App
+- Backend API for Book Management application
+
+## Demo APP
+The App is live at [Heroku.com](https://tuong-book-management.herokuapp.com/books)
+
+## Demo API
+The API is live at [Swagger.io](https://app.swaggerhub.com/apis/huynhdieutuong/book-management/1.0)
+- Version: 1.0.0
+- Author: Tuong Huynh
 
 ## Usage
  Go to .env file and update the values to your own
- - Create [MongoDB Cloud Cluster](account.mongodb.com) and get MONGO_URI to connect database
- - Create [mailtrap.io](mailtrap.io) account and get MAILTRAP_USER and MAILTRAP_PASS
- - Create [cloudinary.com](cloudinary.com) account and get CLOUDINARY_URL
+ - Create [MongoDB Cloud Cluster](https://account.mongodb.com) and get MONGO_URI to connect database
+ - Create [mailtrap.io](https://mailtrap.io) account and get MAILTRAP_USER and MAILTRAP_PASS
+ - Create [cloudinary.com](https://cloudinary.com) account and get CLOUDINARY_URL
  - Generate your SECRET_COOKIE and JWT_SECRET
-
-## Demo
-The API is live at [Swagger.io](https://app.swaggerhub.com/apis/huynhdieutuong/book-management/1.0)
-
-- Version: 1.0.0
-- Author: Tuong Huynh
 
 ## Functionality
 ### CRUD Books
@@ -59,3 +62,10 @@ The API is live at [Swagger.io](https://app.swaggerhub.com/apis/huynhdieutuong/b
 - Change quantity (decrease button, increase button, input number)
 - Make transaction from cart (Require Auth)
 - Auto delete items in cart after made transaction
+
+### Shops
+- Admin CRUD Shop
+- User create shop
+  - User add book from shop
+  - Edit & Delete user's book
+- Show books in shop

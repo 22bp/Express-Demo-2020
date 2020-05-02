@@ -31,3 +31,7 @@ input[type=number]::-webkit-outer-spin-button
 .book-title {
   max-width: 100px;
 }
+
+.toCapitalize {
+  text-transform: capitalize;
+}

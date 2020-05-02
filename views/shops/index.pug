@@ -1,0 +1,38 @@
+extends ../layout
+block content
+  h1 
+    span.mr-2 Shops
+    a.btn.btn-success(href='/shops/add') Add new
+  form.form-inline(action='/shops', method='GET')
+    input.form-control.mr-sm-2(name='q', placeholder="Enter shop's name")
+    button.btn.btn-primary(type='submit') Search
+  table.table.table-bordered
+    thead
+      tr
+        th Shop name
+        th User
+        th Actions
+    tbody
+      each shop in shops
+        tr
+          td.toCapitalize #{shop.name}
+          td #{shop.user}
+          td(class="actions")
+            a.btn.btn-primary(href='/shops/' + shop.id + '/books') View
+            a.btn.btn-warning(href='/shops/' + shop.id + '/edit') Edit
+            a.btn.btn-danger(href='/shops/' + shop.id + '/delete') Delete
+  nav(aria-label='...')
+    ul.pagination
+      li.page-item(class=pagination.prev ? "" : "disabled")
+        a.page-link(href='/shops?page=' + pagination.prev, tabindex='-1', aria-disabled='true') Previous
+      if pagination.prev
+        li.page-item
+          a.page-link(href='/shops?page=' + pagination.prev) #{pagination.prev}
+      li.page-item.active(aria-current='page')
+        a.page-link(href='/shops?page=' + pagination.page) #{pagination.page}
+          span.sr-only (current)
+      if pagination.next
+        li.page-item
+          a.page-link(href='/shops?page=' + pagination.next) #{pagination.next}
+      li.page-item(class=pagination.next ? "" : "disabled")
+        a.page-link(href='/shops?page=' + pagination.next) Next

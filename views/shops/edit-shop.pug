@@ -1,0 +1,35 @@
+extends ../layout
+block content
+  h1 Edit shop
+  if errors
+    each error in errors
+      .alert.alert-danger= error
+    form(action='/shops/'+ shop.id +'/edit', method='POST')
+      div.mb-2
+        h2 Users
+        select.form-control(name='user')
+          option(disabled='', selected='') Choose user
+          each user in users
+            if values.user
+              - var x = false
+              if user.id == values.user
+                - x = true
+            option(value=user.id, selected=x ? '' : null) #{user.id} - #{user.name}
+      div.mb-2
+        h2 Name's shop
+        input.form-control.toCapitalize(name='name' value=values ? values.name : "")
+      button.btn.btn-primary(type='submit') Save
+  else
+    form(action='/shops/'+ shop.id +'/edit', method='POST')
+      div.mb-2
+        h2 Users: 
+        select.form-control(name='user')
+          each user in users
+            - var x = false
+            if user.id == shop.user
+              - x = true
+            option(value=user.id, selected=x ? '' : null) #{user.id} - #{user.name}
+      div.mb-2
+        h2 Name's shop
+        input.form-control.toCapitalize(name='name' value=shop.name)
+      button.btn.btn-primary(type='submit') Save
