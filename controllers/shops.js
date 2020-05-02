@@ -23,11 +23,18 @@ module.exports.books = async (req, res) => {
 
   // Pagination
   var result = calPagination(req.query.page, filtered);
+  
+  // Show button add, edit, delete for owner
+  var showButton = false;
+  if (res.locals.shopMain.user.toString() === shop.user.toString()) {
+    showButton = true;
+  }
 
   res.render("shops/view-shop", {
     shop,
     books: result.filtered,
-    pagination: result.pagination
+    pagination: result.pagination,
+    showButton
   });
 };
 
