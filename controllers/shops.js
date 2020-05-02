@@ -26,7 +26,7 @@ module.exports.books = async (req, res) => {
   
   // Show button add, edit, delete for owner
   var showButton = false;
-  if (res.locals.shopMain.user.toString() === shop.user.toString()) {
+  if (res.locals.shopMain && res.locals.shopMain.user.toString() === shop.user.toString()) {
     showButton = true;
   }
 
