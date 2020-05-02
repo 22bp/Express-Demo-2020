@@ -6,6 +6,7 @@ block content
   p
     a.btn.btn-success(href='/cart/add/' + book.id) Add To Cart
   if book.shop
-    p.toCapitalize Shop: #{book.shop.name}
+    p.toCapitalize Shop: 
+      a(href="/shops/" + book.shop.id + "/books") #{book.shop.name}
   p Description: 
   p #{book.description}

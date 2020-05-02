@@ -2,7 +2,7 @@ extends ../layout
 block content
   h1 
     span.toCapitalize.mr-2 #{shop.name}
-    if shopMain
+    if showButton
       a.btn.btn-success(href='/shops/books/add') Add new book
   form.form-inline(action='/shops/' + shop.id + '/books', method='GET')
     input.form-control.mr-sm-2(name='q', placeholder="Enter book's name")
@@ -21,7 +21,7 @@ block content
           td.book-title #{book.title}
           td(class="actions")
             a.btn.btn-primary(href='/books/' + book.id + '/view') View
-            if shopMain
+            if showButton
               a.btn.btn-warning(href='/shops/books/' + book.id + '/edit') Edit
               a.btn.btn-danger(href='/shops/books/' + book.id + '/delete') Delete
             else
